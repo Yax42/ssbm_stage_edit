@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ssbm_stage_edit", "ssbm_stage_edit2\ssbm_stage_edit2.vcxproj", "{2F1EF7ED-74AB-4D54-A7C7-47F0DA3E2F8C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "data_analysis", "data_analysis\data_analysis.vcxproj", "{52287379-DD7B-440F-AEEA-E32ECE692486}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2F1EF7ED-74AB-4D54-A7C7-47F0DA3E2F8C}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2F1EF7ED-74AB-4D54-A7C7-47F0DA3E2F8C}.Debug|Win32.Build.0 = Debug|Win32
-		{2F1EF7ED-74AB-4D54-A7C7-47F0DA3E2F8C}.Release|Win32.ActiveCfg = Release|Win32
-		{2F1EF7ED-74AB-4D54-A7C7-47F0DA3E2F8C}.Release|Win32.Build.0 = Release|Win32
+		{52287379-DD7B-440F-AEEA-E32ECE692486}.Debug|Win32.ActiveCfg = Debug|Win32
+		{52287379-DD7B-440F-AEEA-E32ECE692486}.Debug|Win32.Build.0 = Debug|Win32
+		{52287379-DD7B-440F-AEEA-E32ECE692486}.Release|Win32.ActiveCfg = Release|Win32
+		{52287379-DD7B-440F-AEEA-E32ECE692486}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
