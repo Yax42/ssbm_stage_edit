@@ -1,7 +1,25 @@
+#include <assert.h>
+
+#include "Window.h"
 #include "MapHead.h"
 
 int									*MapHead::m_ptr = NULL;
 std::vector<Map::ObjectGroup *>		MapHead::m_groups;
+
+void		MapHead::print()
+{
+	assert(m_ptr != NULL); 
+	std::cout << "MapHead\t\tptr" << *m_ptr << std::endl;
+	for (unsigned int i = 0; i < m_groups.size(); i++)
+		m_groups[i]->print();
+}
+
+void		MapHead::display()
+{
+	assert(m_ptr != NULL); 
+	for (unsigned int i = 0; i < m_groups.size(); i++)
+		m_groups[i]->display();
+}
 
 void		MapHead::load(int *ptr)
 {
@@ -24,49 +42,14 @@ void		MapHead::clean()
 	}
 }
 
-//----------------------------------------------------------
-
-namespace Map
+Map::Node	*MapHead::getMouseTarget()
 {
-	ObjectGroup::ObjectGroup(int *ptr, int *id, int deep) : Object(deep)
+	Map::Node	*result;
+	for (unsigned int i = 0; i < m_groups.size(); i++)
 	{
-		m_ptr = ptr;
-		m_id = id;
-		m_ptrToHeadNode = Data::get<int>(*m_ptr);
-		m_unknown1 = Data::get<int>(*m_ptr, 1);
-		m_unknown2 = Data::get<int>(*m_ptr, 2);
-		m_node = new Node(m_ptrToHeadNode, 1);
+		result = m_groups[i]->getMouseTarget();
+		if (result != NULL)
+			return result;
 	}
-
-	ObjectGroup::~ObjectGroup()
-	{
-		delete m_node;
-	}
-
-
-//----------------------------------------------------------
-	Node::Node(int *ptr, int deep) : Object(deep)
-	{
-		m_ptr = ptr;
-
-		m_intData = Data::get<int>(*ptr);
-		m_floatData = Data::get<float>(*ptr);
-
-		if (m_intData[CHILD_PTR] != 0)
-			m_child = new Node(&m_intData[CHILD_PTR], deep + 1);
-		else
-			m_child = NULL;
-		if (m_intData[NEXT_PTR] != 0)
-			m_next = new Node(&m_intData[NEXT_PTR], deep);
-		else
-			m_next = NULL;
-	}
-
-	Node::~Node()
-	{
-		if (m_next != NULL)
-			delete m_next;
-		if (m_child != NULL)
-			delete m_child;
-	}
+	return NULL;
 }

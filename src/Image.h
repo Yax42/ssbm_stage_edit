@@ -23,6 +23,13 @@ public:
 		if (isEqual("map_head"))
 			MapHead::print();
 	}
+
+	virtual void	display()
+	{
+		if (isEqual("map_head"))
+			MapHead::display();
+	}
+
 public:
 	int		*m_strOffset;
 	char	*m_str;

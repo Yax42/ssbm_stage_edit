@@ -26,6 +26,7 @@ private:
 	~Worker();
 public:
 	static void		print();
+	static void		display();
 	static bool		loadData();
 	static bool		saveData();
 

@@ -13,6 +13,7 @@ public:
 	//template <class T>
 	//T		*data(int offset = 0) { return Data::get<T>(m_position + offset);}
 	virtual void		print() = 0;
+	virtual void		display() = 0;
 protected:
 	void	printTab()
 	{
