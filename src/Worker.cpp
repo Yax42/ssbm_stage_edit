@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstring>
 
+#include "Node.h"
 #include "Worker.h"
 #include "Data.h"
 
@@ -22,6 +23,7 @@ bool		Worker::loadData()
 	int		strOrigin = origin + m_header[NB_BASE] * 8;
 
 	Data::solveEndianTo(strOrigin);
+	Data::m_stringPtr = strOrigin + 0x20;
 
 	for (int i = 0; i < m_header[NB_BASE]; i++)
 		m_images[i] = new Image(origin + i * 8, strOrigin);
@@ -44,6 +46,7 @@ void		Worker::print()
 
 void		Worker::display()
 {
-	for (unsigned int i = 0; i < m_images.size(); i++)
-		m_images[i]->display();
+//	for (unsigned int i = 0; i < m_images.size(); i++)
+//		m_images[i]->display();
+	ANode::globalDisplay();
 }

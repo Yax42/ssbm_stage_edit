@@ -1,7 +1,10 @@
 #include <assert.h>
+
+#include "MyMath.h"
 #include "Window.h"
 #include "MapHead.h"
 #include "Worker.h"
+#include "Coll_Node.h"
 
 Window	*Window::Instance = NULL;
 const int		Window::height = 600;
@@ -13,13 +16,27 @@ void		Window::init()
 		Instance = new Window();
 }
 
-Window::Window() : m_window(sf::RenderWindow(sf::VideoMode(width, height), "M.StEdix")), m_view(), m_selectedNode(NULL)
+Window::Window() : m_window(sf::RenderWindow(sf::VideoMode(width, height), "M.StEdix")), m_view()
 {
-	m_zoom = 50;
+	m_isSelecting = false;
+	m_selectShape.setFillColor(sf::Color::Transparent);
+	m_selectShape.setOutlineColor(sf::Color::Red);
+	m_selectShape.setOutlineThickness(2);
 	m_alive = true;
 	assert(m_window.isOpen());
 	m_window.setFramerateLimit(60);
 	m_window.setView(m_view);
+	for (int i = 0; i < sf::Keyboard::KeyCount; i++)
+	{
+		m_keyPressed[i] = false;
+		m_justPressed[i] = false;
+	}
+	for (int i = 0; i < sf::Mouse::ButtonCount; i++)
+	{
+		m_mouse[i] = false;
+		m_mouseJustPressed[i] = false;
+	}
+	m_zoom = 1;
 }
 
 void	Window::draw(const sf::Drawable &drawable)
@@ -30,61 +47,67 @@ void	Window::draw(const sf::Drawable &drawable)
 sf::Vector2f			Window::mousePos()
 {
 	return m_mousePosFloat;
-/*	
-	int		x = sf::Mouse::getPosition().x + m_view.getCenter().x - width / 2;
-	int		y = sf::Mouse::getPosition().y + m_view.getCenter().y - height / 2;
-	return sf::Vector2i(x, y);*/
-}
-
-/*
-sf::Vector2i			Window::mousePos()
-{
-	int		x = sf::Mouse::getPosition().x + m_view.getCenter().x - width / 2;
-	int		y = sf::Mouse::getPosition().y + m_view.getCenter().y - height / 2;
-	return sf::Vector2i(x, y);
-}
-*/
-
-void					Window::select()
-{
-	bool			prevNull = (m_selectedNode == NULL);
-	if (m_selectedNode != NULL)
-		m_selectedNode->m_rect.setOutlineThickness(0);
-	m_selectedNode = MapHead::getMouseTarget();
-	if (m_selectedNode != NULL)
-		m_selectedNode->m_rect.setOutlineThickness(3);
-	if (prevNull && m_selectedNode != NULL)
-		m_selectedNode->printOnly();
 }
 
 void					Window::act()
 {
-	if (m_selectedNode == NULL || sf::Mouse::isButtonPressed(sf::Mouse::Left) == false)
-		select();
-	if (m_selectedNode != NULL && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (m_mouseJustPressed[sf::Mouse::Left])
 	{
-		m_selectedNode->x(mousePos().x);
-		m_selectedNode->y(mousePos().y);
+		m_fromx = mousePos().x;
+		m_fromy = mousePos().y;
+		m_isSelecting = true;
+	}
+	if (m_mouse[sf::Mouse::Left])
+	{
+		m_sizex = mousePos().x - m_fromx;
+		if (m_sizex < 0)
+			m_sizex = 0;
+		m_sizey = mousePos().y - m_fromy;
+		if (m_sizey < 0)
+			m_sizey = 0;
+		m_selectShape.setSize(sf::Vector2f(m_sizex, m_sizey));
+		m_selectShape.setPosition(m_fromx, m_fromy);
+	}
+	else if (m_isSelecting)
+	{
+		m_isSelecting = false;
+		if (!m_keyPressed[sf::Keyboard::LControl] && !m_keyPressed[sf::Keyboard::RControl])
+			ANode::clearSelections();
+		ANode::selectArea(sf::Vector2f(m_fromx, m_fromy), sf::Vector2f(m_fromx + m_sizex, m_fromy + m_sizey));
+	}
+
+	if (m_mouse[sf::Mouse::Right])
+	{
+		ANode::moveSelect(sf::Vector2f(m_deltaMouseFloat.x, m_deltaMouseFloat.y));
 	}
 
 	//Camera
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+	if (m_mouse[sf::Mouse::Middle])
 	{
-		float			x = m_view.getCenter().x - m_deltaMousePos.x;
-		float			y = m_view.getCenter().y - m_deltaMousePos.y;
+		//float			x = m_view.getCenter().x - m_deltaMousePos.x;
+		//float			y = m_view.getCenter().y - m_deltaMousePos.y;
+		float			x = m_view.getCenter().x - m_deltaMouseFloat.x;
+		float			y = m_view.getCenter().y - m_deltaMouseFloat.y;
 		m_view.setCenter(sf::Vector2f(x, y));
 		m_window.setView(m_view);
 	}
 
 	if (m_wheelDelta != 0)
 	{
-		m_zoom += m_wheelDelta;
-		if (m_zoom < 0)
-			m_zoom = 0;
-		else if (m_zoom > 100)
-			m_zoom = 100;
-		m_view.zoom(m_zoom / 100.0);
+		float	zoom = 1 - Math::sgn(m_wheelDelta) * 0.2;
+		int		time = Math::abs(m_wheelDelta);
+		m_zoom = zoom;
+		m_view.zoom(Math::pow(zoom, time));
 		m_window.setView(m_view);
+	}
+
+	//Save
+	if (m_justPressed[sf::Keyboard::Delete])
+	{
+		if (Data::write("../test.dat"))
+			std::cout << "saved" << std::endl;
+		else
+			std::cout << "failed save" << std::endl;
 	}
 }
 
@@ -95,6 +118,10 @@ void					Window::procEvent()
 	m_deltaMousePos.x = 0;
 	m_deltaMousePos.y = 0;
 	m_wheelDelta = 0;
+	for (int i = 0; i < sf::Keyboard::KeyCount; i++)
+		m_justPressed[i] = false;
+	for (int i = 0; i < sf::Mouse::ButtonCount; i++)
+		m_mouseJustPressed[i] = false;
 	while (m_window.pollEvent(ev));
 	{
 		switch (ev.type)
@@ -111,12 +138,55 @@ void					Window::procEvent()
 			case sf::Event::MouseWheelMoved:
 				m_wheelDelta = ev.mouseWheel.delta;
 				break;
+				/*
+			case sf::Event::MouseButtonPressed:
+				m_mouseJustPressed[ev.mouseButton.button] = !m_mouse[ev.mouseButton.button];
+				m_mouse[ev.mouseButton.button] = true;
+				break;
+			case sf::Event::MouseButtonReleased:
+				m_mouse[ev.mouseButton.button] = false;
+				break;
+			case sf::Event::KeyPressed:
+				m_justPressed[ev.key.code] = !m_keyPressed[ev.key.code];
+				m_keyPressed[ev.key.code] = true;
+				break;
+			case sf::Event::KeyReleased:
+				m_keyPressed[ev.key.code] = false;
+				break;
+				*/
 		}
 	}
 
+	for (int i = 0; i < sf::Keyboard::KeyCount; i++)
+	{
+		if (sf::Keyboard::isKeyPressed((sf::Keyboard::Key) i))
+		{
+			m_justPressed[i] = !m_keyPressed[i];
+			m_keyPressed[i] = true;
+		}
+		else
+			m_keyPressed[i] = false;
+	}
+	for (int i = 0; i < sf::Mouse::ButtonCount; i++)
+	{
+		if (sf::Mouse::isButtonPressed((sf::Mouse::Button) i))
+		{
+			m_mouseJustPressed[i] = !m_mouse[i];
+			m_mouse[i] = true;
+		}
+		else
+			m_mouse[i] = false;
+	}
 	m_mousePosFloat = m_window.mapPixelToCoords(m_mousePos);
+	m_deltaMouseFloat = sf::Vector2f(m_deltaMousePos.x * m_zoom, m_deltaMousePos.y * m_zoom);
 }
 
+void					Window::display()
+{
+	Worker::display();
+	if (m_isSelecting)
+		draw(m_selectShape);
+}
 
 void					Window::loop()
 {
@@ -129,7 +199,7 @@ void					Window::loop()
 		m_window.clear();
 		procEvent();
 		act();
-		Worker::display();
+		display();
 		m_window.display();
 	}
 }

@@ -1,9 +1,12 @@
 #include <assert.h>
 
 #include "Window.h"
+#include "Map_Group.h"
+#include "Map_Node.h"
 #include "MapHead.h"
 
 int									*MapHead::m_ptr = NULL;
+int									*MapHead::m_deepPtr = NULL;
 std::vector<Map::ObjectGroup *>		MapHead::m_groups;
 
 void		MapHead::print()
@@ -23,12 +26,13 @@ void		MapHead::display()
 
 void		MapHead::load(int *ptr)
 {
-	m_ptr = ptr;
-	int		i = 0;
-	for (int *ptrToGroup = ptr; *ptr != 0; ptr += 2)
+	m_deepPtr = ptr;
+	m_ptr = Data::get<int>(*ptr);
+
+	
+	for (int *i = m_ptr; *i != 0; i += 2)
 	{
-		m_groups.push_back(new Map::ObjectGroup(&ptrToGroup[0], &ptrToGroup[1]));
-		i++;
+		m_groups.push_back(new Map::ObjectGroup(&i[0], &i[1]));
 	}
 }
 
@@ -40,16 +44,4 @@ void		MapHead::clean()
 			delete m_groups[i];
 		m_groups.clear();
 	}
-}
-
-Map::Node	*MapHead::getMouseTarget()
-{
-	Map::Node	*result;
-	for (unsigned int i = 0; i < m_groups.size(); i++)
-	{
-		result = m_groups[i]->getMouseTarget();
-		if (result != NULL)
-			return result;
-	}
-	return NULL;
 }

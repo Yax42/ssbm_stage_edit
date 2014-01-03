@@ -68,21 +68,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\CollData.h" />
+    <ClInclude Include="..\src\Coll_Node.h" />
     <ClInclude Include="..\src\Data.h" />
     <ClInclude Include="..\src\Image.h" />
     <ClInclude Include="..\src\MapHead.h" />
     <ClInclude Include="..\src\Map_Group.h" />
     <ClInclude Include="..\src\Map_Node.h" />
+    <ClInclude Include="..\src\MyMath.h" />
+    <ClInclude Include="..\src\Node.h" />
     <ClInclude Include="..\src\Object.h" />
     <ClInclude Include="..\src\Window.h" />
     <ClInclude Include="..\src\Worker.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\CollData.cpp" />
+    <ClCompile Include="..\src\Coll_Node.cpp" />
     <ClCompile Include="..\src\Data.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MapHead.cpp" />
     <ClCompile Include="..\src\Map_Group.cpp" />
     <ClCompile Include="..\src\Map_Node.cpp" />
+    <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\Window.cpp" />
     <ClCompile Include="..\src\Worker.cpp" />
   </ItemGroup>

@@ -3,13 +3,19 @@
 #include "SFML\Graphics.hpp"
 #include "Object.h"
 #include "Window.h"
-#include "Map_Group.h"
+#include "Coll_Node.h"
 
-class MapHead
+class CollData 
 {
+public:
+	enum
+	{
+		LOCATIONS,
+		NUMBER,
+	};
 private:
-	MapHead();
-	~MapHead();
+	CollData();
+	~CollData();
 public:
 	static void			load(int *ptr);
 	static void			print();
@@ -18,5 +24,6 @@ public:
 public:
 	static int									*m_ptr;
 	static int									*m_deepPtr;
-	static std::vector<Map::ObjectGroup *>		m_groups;
+	static int									m_count;
+	static std::vector<Coll::Node *>			m_nodes;
 };

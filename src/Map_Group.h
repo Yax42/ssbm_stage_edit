@@ -16,7 +16,6 @@ namespace Map
 		~ObjectGroup();
 		virtual void	print();
 		virtual void	display();
-		Map::Node		*getMouseTarget();
 		
 	public:
 		int		*m_ptr;

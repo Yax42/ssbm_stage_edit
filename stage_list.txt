@@ -1,0 +1,106 @@
+Courtesy of Steelia:
+
+GrBB = Big Blue
+
+GrCn = Corneria
+
+GrCs = Princess Peach's Castle
+
+GrEF1 = Figure?1
+GrEF2 = Figure?2
+GrEF3 = Figure?3
+
+GrFs = Fourside
+
+GrFz = Flat Zone
+
+GrGb = Great Bay (Termina)
+
+GrGd = Garden (Kongo Jungle)
+
+GrGr = Green Greens
+
+GrHe = Heal (All-Star)
+
+GrHr = Homerun Contest
+
+GrI1 = Mushroom Kingdom
+
+GrI2 = Mushroom Kingdom II (Subcon)
+
+GrIm = Icicle Mountain
+
+GrIz = Izumi (Fountain of Dreams)
+
+GrKg = Jungle Japes
+
+GrKr = Kraid (Brinstar Depths)
+
+GrMc = Mute City
+
+GrNBa = Battlefield
+GrNBr = F-Zero adventure mode stage
+GrNFg = Figure Get (Falling trophy stage)
+GrNKr = Mushroom Kingdom adventure mode stage
+GrNLa = Final Destination
+GrNPo = Pushon?
+GrNSr = Hyrule Castle chasm (adv. mode stage)
+GrNZr = Zebes (Brinstar); "DANGER"?
+
+GrOk = Kongo Jungle (N64)
+
+GrOp = Dream Land (N64)
+
+GrOt = Onett
+
+GrOy = Yoshi's Story (N64)
+
+GrPs = Pokemon Stadium
+GrPs1 = Pokemon Stadium {Fire}?
+GrPs2 = Pokemon Stadium {Grass}?
+GrPs3 = Pokemon Stadium {Water}?
+GrPs4 = Pokemon Stadium {Rock}?
+
+GrPu = Pura (Poke Floats)
+
+GrRc = Rainbow Cruise
+
+GrSh = Hyrule Temple
+
+GrSt = Yoshi's Story
+
+GrTCa = Captain Falcon Target Test (TT)
+GrTCl = Young Link TT
+GrTDk = Donkey Kong TT
+GrTDr = Dr. Mario TT
+
+GrTe = "TEST"
+
+GrTFc = Falco TT
+GrTFe = Roy TT
+GrTFx = Fox TT
+GrTGn = Ganondorf TT
+GrTGw = Mr. Game & Watch TT
+GrTIc = Ice Climbers TT
+GrTKb = Kirby TT
+GrTKp = Bowser TT
+GrTLg = Luigi TT
+GrTLk = Link TT
+GrTMr = Mario TT
+GrTMs = Marth TT
+GrTMt = MewtWo TT
+GrTNs = Ness TT
+GrTPc = Pichu TT
+GrTPe = Peach TT
+GrTPk = Pikachu TT
+GrTPr = Jigglypuff TT
+GrTSk = Sheik TT (scrapped)
+GrTSs = Samus TT
+GrTYs = Yoshi TT
+GrTZd = Zelda TT
+
+GrVe = Venom
+
+GrYt = Yoshi's Island
+
+GrZe = Brinstar (Planet Zebes)

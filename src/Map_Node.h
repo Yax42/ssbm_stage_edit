@@ -1,11 +1,10 @@
 #pragma once
 
-#include "SFML\Graphics.hpp"
-#include "Object.h"
+#include "Node.h"
 
 namespace Map
 {
-	class Node : public Object
+	class Node : public ANode
 	{
 	public:
 		enum
@@ -29,18 +28,19 @@ namespace Map
 			COUNT
 		};
 	public:
-		Node(int *ptr, int deep);
+		Node(int *ptr, int deep, Node *mother);
 		~Node();
 		virtual void	print();
 		virtual void	display();
-		sf::Vector2f	pos() { return sf::Vector2f(x(), y()); }
-		float			x() const { return m_floatData[LOCATIONX]; }
-		float			y() const { return m_floatData[LOCATIONY]; }
+		float			x() const;
+		float			y() const;
 		void			x(float x);
 		void			y(float y);
-		sf::Vector2f	size() { return sf::Vector2f(m_floatData[SIZEX] * 10, m_floatData[SIZEY] * 10); }
-		Map::Node		*getMouseTarget();
+		void			updateFamilyPos();
+		void			updatePos();
+		sf::Vector2f	size() { return sf::Vector2f(/*m_floatData[SIZEX]*/1 * m_sizeFactor, /*m_floatData[SIZEY]*/1 * m_sizeFactor); }
 		void			printOnly();
+		virtual void	setThickness(int v);
 
 	public:
 		int					*m_ptr;
@@ -48,6 +48,10 @@ namespace Map
 		float				*m_floatData;
 		Node				*m_child;
 		Node				*m_next;
+		Node				*m_mother;
 		sf::RectangleShape	m_rect;
+		static int			MotherCount;
+		static char			*Names[17];
+		std::string			m_name;
 	};
 }

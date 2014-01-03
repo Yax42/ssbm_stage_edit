@@ -3,24 +3,58 @@
 
 namespace Map
 {
-	Node::Node(int *ptr, int deep) : Object(deep)
+	int			Node::MotherCount;
+	char		*Node::Names[17] =
 	{
+		"",
+		"",
+		"Left/top camera boundary",
+		"Right/bottom camera boundary",
+		"Left/top blast zone",
+		"Right/bottom blast zone",
+		"Spawn item 1",
+		"Spawn item 2",
+		"Spawn item 3",
+		"Spawn item 4",
+		"Spawn item 5",
+		"Spawn item 6",
+		"Spawn item 7",
+		"Spawn player 1",
+		"Spawn player 2",
+		"Spawn player 3",
+		"Spawn player 4"
+	};
+
+	Node::Node(int *ptr, int deep, Node *mother) : ANode(deep)
+	{
+		if (ObjectGroup::tmp < 17)
+			m_name = Names[ObjectGroup::tmp];
+		else
+			m_name = "";
 		ObjectGroup::tmp++;
 		m_ptr = ptr;
 
 		m_intData = Data::get<int>(*ptr);
 		m_floatData = Data::get<float>(*ptr);
+		m_mother = mother;
 
-		m_rect.setSize(size());
 		m_rect.setPosition(pos());
-		m_rect.setFillColor(sf::Color(128, 128, 0, 128));
+		m_rect.setFillColor(sf::Color((MotherCount % 2)* 127, ((MotherCount / 2) % 2) * 63 + 128, (m_intData[DATA_PTR] != 0) * 255, 128));
 
 		if (m_intData[CHILD_PTR] != 0)
-			m_child = new Node(&m_intData[CHILD_PTR], deep + 1);
+		{
+			m_child = new Node(&m_intData[CHILD_PTR], deep + 1, this);
+			m_sizeFactor = 5;
+			MotherCount++;
+		}
 		else
+		{
 			m_child = NULL;
+			m_sizeFactor = 10;
+		}
+		m_rect.setSize(size());
 		if (m_intData[NEXT_PTR] != 0)
-			m_next = new Node(&m_intData[NEXT_PTR], deep);
+			m_next = new Node(&m_intData[NEXT_PTR], deep, m_mother);
 		else
 			m_next = NULL;
 	}
@@ -37,7 +71,10 @@ namespace Map
 	{
 		std::cout.precision(4);
 		printTab();
-		std::cout << "Node Z" << m_intData[EMPTY1]
+		if (m_name.length() > 0)
+			std::cout << "Node " << m_name << std::endl;
+		printTab();
+		std::cout <<"Z" << m_intData[EMPTY1]
 				<< " Flags:" << m_intData[FLAGS]
 				<< " Child:" << m_intData[CHILD_PTR]
 				<< " Next:" << m_intData[NEXT_PTR]
@@ -50,6 +87,10 @@ namespace Map
 		std::cout << "\tSize:\t\tX" << m_floatData[SIZEX] << "\tY" << m_floatData[SIZEY] << "\tZ" << m_floatData[SIZEZ] << std::endl;
 		printTab();
 		std::cout << "\tPosition:\tX" << m_floatData[LOCATIONX] << "\tY" << m_floatData[LOCATIONY] << "\tZ" << m_floatData[LOCATIONZ] << std::endl;
+		if (false && m_intData[DATA_PTR] != 0)
+		{
+			Data::strongPrint(m_intData[DATA_PTR]);
+		}
 	}
 
 	void		Node::print()
@@ -63,6 +104,7 @@ namespace Map
 
 	void		Node::display()
 	{
+		updatePos();
 		g_window.draw(m_rect);
 		if (m_child != NULL)
 			m_child->display();
@@ -70,30 +112,58 @@ namespace Map
 			m_next->display();
 	}
 
-	Map::Node			*Node::getMouseTarget()
+	void			Node::updateFamilyPos()
 	{
-		sf::Vector2f	mouse = g_window.mousePos();
+		updatePos();
+		if (m_next != NULL)
+			m_next->updateFamilyPos();
+	}
 
-		if (mouse.x > x() && mouse.x < x() + size().x
-			&& mouse.y > y() && mouse.y < y() + size().y)
-				return this;
-		Node	*result = NULL;
+	void			Node::updatePos()
+	{
+		m_rect.setPosition(x(), y());
 		if (m_child != NULL)
-			result = m_child->getMouseTarget();
-		if (m_next != NULL && result == NULL)
-			result = m_next->getMouseTarget();
-		return result;
+		{
+			m_child->updateFamilyPos();
+			if (ANode::SelectCount > 1 && m_selected)
+				unselect();
+		}
 	}
 
 	void			Node::x(float x)
 	{
+		if (m_mother != NULL)
+			x -= m_mother->x();
 		m_floatData[LOCATIONX] = x;
-		m_rect.setPosition(x, m_rect.getPosition().y);
+		updatePos();
 	}
 
 	void			Node::y(float y)
 	{
+		if (m_mother != NULL)
+			y -= m_mother->y();
 		m_floatData[LOCATIONY] = y;
-		m_rect.setPosition(m_rect.getPosition().x, y);
+		updatePos();
+	}
+
+	float			Node::x() const
+	{
+		float		result = m_floatData[LOCATIONX];
+		if (m_mother != NULL)
+			result += m_mother->x();
+		return result;
+	}
+
+	float			Node::y() const
+	{
+		float		result = m_floatData[LOCATIONY];
+		if (m_mother != NULL)
+			result += m_mother->y();
+		return result;
+	}
+
+	void			Node::setThickness(int v)
+	{
+		m_rect.setOutlineThickness(v);
 	}
 }

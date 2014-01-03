@@ -3,7 +3,12 @@
 
 #define g_window (*Window::Instance)
 
+
 namespace Map
+{
+	class Node;
+}
+namespace Coll
 {
 	class Node;
 }
@@ -30,15 +35,25 @@ public:
 	void					draw(const sf::Drawable &drawable);
 	void					loop();
 	void					select();
+	void					display();
 public:
 	sf::RenderWindow		m_window;
 	sf::View				m_view;
-	Map::Node				*m_selectedNode;
 	bool					m_mouse[sf::Mouse::ButtonCount];
+	bool					m_mouseJustPressed[sf::Mouse::ButtonCount];
 	sf::Vector2i			m_mousePos;
 	sf::Vector2i			m_deltaMousePos;
 	int						m_wheelDelta;
 	sf::Vector2f			m_mousePosFloat;
+	sf::Vector2f			m_deltaMouseFloat;
 	bool					m_alive;
-	int						m_zoom;
+	bool					m_isSelecting;
+	sf::RectangleShape		m_selectShape;
+	bool					m_keyPressed[sf::Keyboard::KeyCount];
+	bool					m_justPressed[sf::Keyboard::KeyCount];
+	float					m_fromx;
+	float					m_fromy;
+	float					m_sizex;
+	float					m_sizey;
+	float					m_zoom;
 };
