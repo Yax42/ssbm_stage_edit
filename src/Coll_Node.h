@@ -14,20 +14,22 @@ namespace Coll
 			COUNT
 		};
 	public:
-		Node(int *ptr, int deep = 0);
+		Node(int *ptr, int id, int deep = 0);
 		~Node();
 		virtual void	print();
-		virtual void	printOnly() { print(); };
 		virtual void	display();
 		float			x() const;
 		float			y() const;
 		void			x(float x);
 		void			y(float y);
 		void			updatePos();
+		void			printFlag(int idx);
 		virtual void	setThickness(int v);
 	public:
 		int					*m_ptr;
+		int					m_id;
 		sf::CircleShape		m_rect;
-		float				*m_floatData;
+		float				*m_position;
+		//int					*m_flags;
 	};
 }

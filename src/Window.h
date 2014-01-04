@@ -56,4 +56,5 @@ public:
 	float					m_sizex;
 	float					m_sizey;
 	float					m_zoom;
+	int						m_tmp[10];
 };

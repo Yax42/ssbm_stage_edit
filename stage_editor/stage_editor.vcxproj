@@ -69,6 +69,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\CollData.h" />
+    <ClInclude Include="..\src\Coll_ElemNode.h" />
+    <ClInclude Include="..\src\Coll_LinkNode.h" />
     <ClInclude Include="..\src\Coll_Node.h" />
     <ClInclude Include="..\src\Data.h" />
     <ClInclude Include="..\src\Image.h" />
@@ -83,6 +85,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CollData.cpp" />
+    <ClCompile Include="..\src\Coll_ElemNode.cpp" />
+    <ClCompile Include="..\src\Coll_LinkNode.cpp" />
     <ClCompile Include="..\src\Coll_Node.cpp" />
     <ClCompile Include="..\src\Data.cpp" />
     <ClCompile Include="..\src\main.cpp" />

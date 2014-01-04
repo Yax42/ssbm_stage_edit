@@ -42,6 +42,7 @@ void		Worker::print()
 
 	for (unsigned int i = 0; i < m_images.size(); i++)
 		m_images[i]->print();
+	//CollData::print();
 }
 
 void		Worker::display()

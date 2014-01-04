@@ -27,6 +27,7 @@ namespace Map
 
 	Node::Node(int *ptr, int deep, Node *mother) : ANode(deep)
 	{
+		m_type = NodeType::MAP;
 		if (ObjectGroup::tmp < 17)
 			m_name = Names[ObjectGroup::tmp];
 		else
@@ -34,29 +35,46 @@ namespace Map
 		ObjectGroup::tmp++;
 		m_ptr = ptr;
 
-		m_intData = Data::get<int>(*ptr);
-		m_floatData = Data::get<float>(*ptr);
-		m_mother = mother;
-
-		m_rect.setPosition(pos());
-		m_rect.setFillColor(sf::Color((MotherCount % 2)* 127, ((MotherCount / 2) % 2) * 63 + 128, (m_intData[DATA_PTR] != 0) * 255, 128));
-
-		if (m_intData[CHILD_PTR] != 0)
-		{
-			m_child = new Node(&m_intData[CHILD_PTR], deep + 1, this);
-			m_sizeFactor = 5;
-			MotherCount++;
-		}
-		else
-		{
+		if (*ptr >= Data::m_fileSize || *ptr < 0)
+		{	
+			ptr = Data::Dummy;
+			m_intData = Data::Dummy;
+			m_floatData = (float *)Data::Dummy;
+			m_mother = mother;
 			m_child = NULL;
-			m_sizeFactor = 10;
-		}
-		m_rect.setSize(size());
-		if (m_intData[NEXT_PTR] != 0)
-			m_next = new Node(&m_intData[NEXT_PTR], deep, m_mother);
-		else
+			m_sizeFactor = 0;
+			m_rect.setSize(size());
 			m_next = NULL;
+			std::cout << "Dummy Map_Node" << std::endl;
+			ObjectGroup::Dummy = true;
+		}
+		else
+		{
+			m_intData = Data::get<int>(*ptr);
+			m_floatData = Data::get<float>(*ptr);
+			m_mother = mother;
+
+			m_rect.setPosition(pos());
+			m_rect.setFillColor(sf::Color((MotherCount % 2)* 127, ((MotherCount / 2) % 2) * 63 + 128, (m_intData[DATA_PTR] != 0) * 255, 128));
+
+			//std::cout << m_intData[Node::EMPTY1] << std::endl;
+			if (m_intData[CHILD_PTR] != 0)
+			{
+				m_child = new Node(&m_intData[CHILD_PTR], deep + 1, this);
+				m_sizeFactor = 2;
+				MotherCount++;
+			}
+			else
+			{
+				m_child = NULL;
+				m_sizeFactor = 4;
+			}
+			m_rect.setSize(size());
+			if (m_intData[NEXT_PTR] != 0)
+				m_next = new Node(&m_intData[NEXT_PTR], deep, m_mother);
+			else
+				m_next = NULL;
+		}
 	}
 
 	Node::~Node()

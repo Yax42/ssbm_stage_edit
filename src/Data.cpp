@@ -14,6 +14,7 @@ int				*Data::m_intBuffer = NULL;
 int				Data::m_fileSize;	//0x00
 Byte			*Data::m_data;		//0x20
 int				Data::m_stringPtr = -1;
+int				Data::Dummy[100] = {0};
 
 template <class T>
 void	fixEndian(T &val) // to little endian
@@ -165,7 +166,7 @@ void		Data::print(int idx, int count)
 		return;
 	std::cout << "Index:\t" << idx << std::endl;
 	for (int i = 0; i < count; i++)
-		std::cout << i << "\tint:" << *get<int>(idx, i) << "\tfloat:" << *get<float>(idx, i) << std::endl;
+		std::cout << i << "\t" <<  Math::binStr(*get<int>(idx, i)) << " int:" << *get<int>(idx, i) << " float:" << *get<float>(idx, i) << std::endl;
 }
 void	printTab(int count)
 {
@@ -189,9 +190,16 @@ void	printTab(int count)
 		std::cout << i << ": ";
 		if (Math::abs(*data) > m_fileSize)
 		{
-			std::cout  << *((float *) data);
-			std::cout  << "\t" << ((float *) *data);
-			std::cout << "\t" << *data << std::endl;
+			if (Math::abs(*(float *) data) < 0.01)
+			{
+				std::cout << Math::binStr(*data) << std::endl;
+			}
+			else
+			{
+				std::cout  << *((float *) data);
+				std::cout  << "\t" << ((float *) *data);
+				std::cout << "\t" << *data << std::endl;
+			}
 		}
 		else if (*data > 10000 && *data != 65536 && *data != 65537 && *data != 65792)
 			strongPrint(*data, count, tab + 1);

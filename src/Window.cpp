@@ -37,6 +37,8 @@ Window::Window() : m_window(sf::RenderWindow(sf::VideoMode(width, height), "M.St
 		m_mouseJustPressed[i] = false;
 	}
 	m_zoom = 1;
+	for (int i = 0; i < 10; i++)
+		m_tmp[i] = 0;
 }
 
 void	Window::draw(const sf::Drawable &drawable)
@@ -78,7 +80,9 @@ void					Window::act()
 
 	if (m_mouse[sf::Mouse::Right])
 	{
-		ANode::moveSelect(sf::Vector2f(m_deltaMouseFloat.x, m_deltaMouseFloat.y));
+		float factor = (m_keyPressed[sf::Keyboard::Space] ? 0.1 : 1);
+		ANode::moveSelect(sf::Vector2f(	m_deltaMouseFloat.x * !m_keyPressed[sf::Keyboard::LShift] * factor,
+										m_deltaMouseFloat.y * !m_keyPressed[sf::Keyboard::LControl] * factor));
 	}
 
 	//Camera
@@ -90,6 +94,29 @@ void					Window::act()
 		float			y = m_view.getCenter().y - m_deltaMouseFloat.y;
 		m_view.setCenter(sf::Vector2f(x, y));
 		m_window.setView(m_view);
+	}
+
+	if (m_justPressed[sf::Keyboard::W])
+		std::cout << "id: " << ++m_tmp[0] << std::endl;
+	if (m_justPressed[sf::Keyboard::S])
+		std::cout << "id: " << --m_tmp[0] << std::endl;
+	if (m_justPressed[sf::Keyboard::Q])
+		std::cout << "val: " << ++m_tmp[1] << std::endl;
+	if (m_justPressed[sf::Keyboard::A])
+		std::cout << "val: " << --m_tmp[1] << std::endl;
+	if (m_justPressed[sf::Keyboard::E])
+		std::cout << "type: " << ++m_tmp[2] << std::endl;
+	if (m_justPressed[sf::Keyboard::D])
+		std::cout << "type: " << --m_tmp[2] << std::endl;
+	if (m_justPressed[sf::Keyboard::R])
+		std::cout << "focus: " << ++m_tmp[3] << std::endl;
+	if (m_justPressed[sf::Keyboard::F])
+		std::cout << "focus: " << --m_tmp[3] << std::endl;
+
+
+	if (m_justPressed[sf::Keyboard::X])
+	{
+		ANode::globalAct(m_tmp);
 	}
 
 	if (m_wheelDelta != 0)

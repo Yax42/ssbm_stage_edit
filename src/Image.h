@@ -23,13 +23,13 @@ public:
 	{
 		printTab();
 		std::cout << *m_strOffset << "\t " << std::string(m_str) << std::endl;
-		if (isEqual("itemdata"))
-			Data::strongPrint(*m_ptr, 10);
-		return;
-		if (isEqual("map_head"))
-			MapHead::print();
 		if (isEqual("coll_data"))
 			CollData::print();
+		return;
+		if (isEqual("itemdata"))
+			Data::strongPrint(*m_ptr, 10);
+		if (isEqual("map_head"))
+			MapHead::print();
 	}
 
 	virtual void	display()

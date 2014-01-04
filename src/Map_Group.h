@@ -11,6 +11,7 @@ namespace Map
 	{
 	public:
 		static int		tmp;
+		static bool		Dummy;
 	public:
 		ObjectGroup(int *ptr, int *id, int deep = 0);
 		~ObjectGroup();

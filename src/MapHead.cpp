@@ -32,7 +32,11 @@ void		MapHead::load(int *ptr)
 	
 	for (int *i = m_ptr; *i != 0; i += 2)
 	{
-		m_groups.push_back(new Map::ObjectGroup(&i[0], &i[1]));
+		Map::ObjectGroup	*cur = new Map::ObjectGroup(&i[0], &i[1]);
+		if (Map::ObjectGroup::Dummy)
+			delete cur;
+		else
+			m_groups.push_back(cur);
 	}
 }
 
