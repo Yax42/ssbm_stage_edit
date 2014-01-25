@@ -6,6 +6,8 @@
 #include "Worker.h"
 #include "Coll_Node.h"
 
+bool			DynamicVar::m_dummy = false;
+bool			*DynamicVar::m_shift = &DynamicVar::m_dummy;
 Window	*Window::Instance = NULL;
 const int		Window::height = 600;
 const int		Window::width = 800;
@@ -39,6 +41,12 @@ Window::Window() : m_window(sf::RenderWindow(sf::VideoMode(width, height), "M.St
 	m_zoom = 1;
 	for (int i = 0; i < 10; i++)
 		m_tmp[i] = 0;
+	DynamicVar::m_shift = &m_keyPressed[sf::Keyboard::LShift];
+	m_vars[0] = DynamicVar("id", m_tmp[0], m_justPressed[sf::Keyboard::W], m_justPressed[sf::Keyboard::S]);
+	m_vars[1] = DynamicVar("val", m_tmp[1], m_justPressed[sf::Keyboard::Q], m_justPressed[sf::Keyboard::A]);
+	m_vars[2] = DynamicVar("type", m_tmp[2], m_justPressed[sf::Keyboard::E], m_justPressed[sf::Keyboard::D]);
+	m_vars[3] = DynamicVar("focus", m_tmp[3], m_justPressed[sf::Keyboard::R], m_justPressed[sf::Keyboard::F]);
+	m_vars[4] = DynamicVar("focusTestFloat", m_tmp[4], m_justPressed[sf::Keyboard::T], m_justPressed[sf::Keyboard::G]);
 }
 
 void	Window::draw(const sf::Drawable &drawable)
@@ -96,28 +104,45 @@ void					Window::act()
 		m_window.setView(m_view);
 	}
 
-	if (m_justPressed[sf::Keyboard::W])
-		std::cout << "id: " << ++m_tmp[0] << std::endl;
-	if (m_justPressed[sf::Keyboard::S])
-		std::cout << "id: " << --m_tmp[0] << std::endl;
-	if (m_justPressed[sf::Keyboard::Q])
-		std::cout << "val: " << ++m_tmp[1] << std::endl;
-	if (m_justPressed[sf::Keyboard::A])
-		std::cout << "val: " << --m_tmp[1] << std::endl;
-	if (m_justPressed[sf::Keyboard::E])
-		std::cout << "type: " << ++m_tmp[2] << std::endl;
-	if (m_justPressed[sf::Keyboard::D])
-		std::cout << "type: " << --m_tmp[2] << std::endl;
-	if (m_justPressed[sf::Keyboard::R])
-		std::cout << "focus: " << ++m_tmp[3] << std::endl;
-	if (m_justPressed[sf::Keyboard::F])
-		std::cout << "focus: " << --m_tmp[3] << std::endl;
-
-
+	//--------------------------
+	//---User Actions-----------
+	//--------------------------
+	for (int i = 0; i < 10; i++)
+	{
+		m_vars[i].proc();
+		if (m_justPressed[sf::Keyboard::V])
+			m_vars[i].print();
+	}
 	if (m_justPressed[sf::Keyboard::X])
 	{
-		ANode::globalAct(m_tmp);
+		if (m_tmp[Var::TYPE] == -1)
+		{
+			if (m_tmp[Var::ID] == 0)
+			{
+				if (m_tmp[Var::VAL] < CollData::m_nodes.size())
+					CollData::m_nodes[m_tmp[Var::VAL]]->select();
+			}
+			else if (m_tmp[Var::ID] == 1)
+			{
+				if (m_tmp[Var::VAL] < CollData::m_links.size())
+					CollData::m_links[m_tmp[Var::VAL]]->select();
+			}
+			else if (m_tmp[Var::ID] == 2)
+			{
+				if (m_tmp[Var::VAL] < CollData::m_elems.size())
+					CollData::m_elems[m_tmp[Var::VAL]]->select();
+			}
+		}
+		else
+			ANode::globalAct(m_tmp);
 	}
+	if (m_justPressed[sf::Keyboard::C])
+	{
+		CollData::autoResolve();
+	}
+	//--------------------------
+	//--------------------------
+	//--------------------------
 
 	if (m_wheelDelta != 0)
 	{
@@ -137,24 +162,35 @@ void					Window::act()
 			std::cout << "failed save" << std::endl;
 	}
 }
-
-void					Window::procEvent()
+void					Window::cleanEvent()
 {
-	sf::Event			ev;
-
 	m_deltaMousePos.x = 0;
 	m_deltaMousePos.y = 0;
 	m_wheelDelta = 0;
+	m_deltaMouseFloat = sf::Vector2f();
 	for (int i = 0; i < sf::Keyboard::KeyCount; i++)
 		m_justPressed[i] = false;
 	for (int i = 0; i < sf::Mouse::ButtonCount; i++)
 		m_mouseJustPressed[i] = false;
+}
+
+void					Window::procEvent()
+{
+	sf::Event			ev;
+	cleanEvent();
+
 	while (m_window.pollEvent(ev));
 	{
 		switch (ev.type)
 		{
 			case sf::Event::Closed:
 				m_alive = false;
+				break;
+			case sf::Event::GainedFocus:
+				m_focus = true;
+				break;
+			case sf::Event::LostFocus:
+				m_focus = false;
 				break;
 			case sf::Event::MouseMoved:
 				m_deltaMousePos.x = ev.mouseMove.x - m_mousePos.x;
@@ -206,6 +242,8 @@ void					Window::procEvent()
 	}
 	m_mousePosFloat = m_window.mapPixelToCoords(m_mousePos);
 	m_deltaMouseFloat = sf::Vector2f(m_deltaMousePos.x * m_zoom, m_deltaMousePos.y * m_zoom);
+	if (m_focus == false)
+		cleanEvent();
 }
 
 void					Window::display()

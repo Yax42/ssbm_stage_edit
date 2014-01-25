@@ -14,7 +14,7 @@ namespace Coll
 		m_rect.setPosition(pos());
 		m_rect.setFillColor(sf::Color(255, 128, 255, 255));
 
-		m_sizeFactor = 1;
+		m_sizeFactor = 2;
 		m_rect.setRadius(size().x);
 	}
 

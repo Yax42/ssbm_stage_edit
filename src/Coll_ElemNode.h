@@ -9,10 +9,12 @@ namespace Coll
 	public:
 		enum
 		{
-			FLAG1,
-			FLAG2,
-			FLAG3,
-			FLAG4,
+			//les flags ont sont deux short : le nombre de ligne orientee dans le sens donne, et l'id du link ligne "maitresse" (?) de l'orientation.
+			// Il faut faire attention de mettre les ligne maitre a cote je crois. (un ttruc comme ca)
+			FLAG1, //TOP
+			FLAG2, // BOT
+			FLAG3, // RIGHT
+			FLAG4, //LEFT
 			EMPTY,
 			X1,
 			Y1,

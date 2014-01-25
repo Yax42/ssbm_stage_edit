@@ -16,9 +16,15 @@ public:
 		NUMBER,
 		LINKS,
 		LINK_COUNT,
-		ELEMS = 9,
-		ELEM_COUNT
-		
+		REF_TOP,
+		REF_BOT,
+		REF_RIGHT,
+		REF_LEFT,
+		M2,
+		ELEMS,
+		ELEM_COUNT,
+		MISTERY,
+		COUNT = 12
 	};
 private:
 	CollData();
@@ -28,6 +34,7 @@ public:
 	static void			print();
 	static void			display();
 	static void			clean();
+	static void			autoResolve();
 public:
 	static int									*m_ptr;
 	static int									*m_deepPtr;

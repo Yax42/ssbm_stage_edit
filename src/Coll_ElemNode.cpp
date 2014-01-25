@@ -11,7 +11,7 @@ namespace Coll
 		m_shortPtr = (short *) m_ptr;
 		m_floatPtr = (float *) &m_ptr[X1];
 		m_id = id;
-		m_sizeFactor = 8;
+		m_sizeFactor = 1;
 
 		m_shape.setFillColor(sf::Color::Green);
 
@@ -52,7 +52,7 @@ namespace Coll
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			if (m_shortPtr[2 * j + 1])
+			if (m_shortPtr[2 * j])
 			{
 				m_shape.setSize(sf::Vector2f(0.5, j + 1));
 				m_shape.setPosition(CollData::m_links[m_shortPtr[2 * j + 1]]->x(),

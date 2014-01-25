@@ -33,4 +33,6 @@ public:
 public:
 	static int						*m_header;
 	static std::vector<Image *>		m_images;
+	static int						m_strOrigin;
+	static int						m_origin;
 };

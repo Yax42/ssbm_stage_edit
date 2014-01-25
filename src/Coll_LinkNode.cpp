@@ -41,6 +41,7 @@ namespace Coll
 	void			LinkNode::print()
 	{
 			std::cout << m_id << "\tfrom: " << m_shortPtr[LINK1_F] << "\tto: " << m_shortPtr[LINK1_T] << std::endl;
+			std::cout << "\tfrom: " << m_shortPtr[LINK2_F] << "\tto: " << m_shortPtr[LINK2_T] << std::endl;
 			std::cout << "\t" << Math::binStr(*m_flag[0]) << " " << (int)*m_flag[0] << std::endl;
 			std::cout << "\t" << Math::binStr(*m_flag[1]) << " " << (int)*m_flag[1] << std::endl;
 			if (*m_flag[2] || *m_flag[3])
@@ -66,14 +67,19 @@ namespace Coll
 			line->color = sf::Color::Cyan;
 		g_window.m_window.draw(line, 2, sf::Lines);
 
-		if (false && m_shortPtr[LINK2_F] != -1) // Inutile à afficher
+		if (m_shortPtr[LINK2_F] != -1)
 		{
-			line[0] = sf::Vertex(getLinkPos(LINK2_F)),
+			line[0] = sf::Vertex(pos());
+			line[1] = sf::Vertex(getLinkPos(LINK2_F)),
+			line->color = sf::Color(0,0,128, 128);
+			g_window.m_window.draw(line, 2, sf::Lines);
+		}
+
+		if (m_shortPtr[LINK2_T] != -1)
+		{
+			line[0] = sf::Vertex(pos());
 			line[1] = sf::Vertex(getLinkPos(LINK2_T));
-			if (m_selected)
-				line->color = sf::Color(255, 128, 0);
-			else
-				line->color = sf::Color::Red;
+			line->color = sf::Color(128,0,0, 128);
 			g_window.m_window.draw(line, 2, sf::Lines);
 		}
 	}
@@ -91,12 +97,12 @@ namespace Coll
 	float			LinkNode::x() const
 	{
 		return (CollData::m_nodes[m_shortPtr[LINK1_F]]->x() +
-		CollData::m_nodes[m_shortPtr[LINK1_T]]->x() - m_sizeFactor) / 2;
+		CollData::m_nodes[m_shortPtr[LINK1_T]]->x()) / 2;
 	}
 	float			LinkNode::y() const
 	{
 		return (CollData::m_nodes[m_shortPtr[LINK1_F]]->y() +
-		CollData::m_nodes[m_shortPtr[LINK1_T]]->y() - m_sizeFactor) / 2;
+		CollData::m_nodes[m_shortPtr[LINK1_T]]->y()) / 2;
 	}
 	void			LinkNode::x(float x){}
 	void			LinkNode::y(float y){}
@@ -113,9 +119,7 @@ namespace Coll
 	{
 		if (data[2] == 0)
 			*m_flag[data[0]] = data[1];
-		else if (data[0] == 0)
-			m_shortPtr[LINK1_F] = data[1];
 		else
-			m_shortPtr[LINK1_T] = data[1];
+			m_shortPtr[data[0]] = data[1];
 	}
 }

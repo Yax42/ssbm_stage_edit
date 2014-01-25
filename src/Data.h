@@ -19,13 +19,16 @@ public:
 	template <class T>
 	static T				*get(int idx, int offset = 0)
 	{
-		assert(idx > 0 && idx + offset * sizeof(T) < m_fileSize);
-		return (T *)(&m_data[idx + offset * sizeof(T)]);
+		int actualOffset = offset * sizeof(T);
+		assert(idx + actualOffset >= 0 && idx + actualOffset < m_fileSize);
+		return (T *)(&m_data[idx + actualOffset]);
 	}
 	static Byte				*getHeader() { return m_buffer; }
 	static void				solveEndianTo(int to);
-	static void				print(int idx, int count = 10);
-	static void				strongPrint(int idx, int count = 5, int tab = 0);
+	static void				print(int idx, int count = 10, bool fourOct = false);
+	static void				print(int *idx, int count = 10, bool fourOct = false);
+	static void				strongPrint(int idx, int count = 5, int deepLimit = 5, int tab = 0);
+	static int				getId(void *ptr) { return (((int)ptr) - ((int)m_data)); }
 
 private:
 	static void				solveFileEndian();

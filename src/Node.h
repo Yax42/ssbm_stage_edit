@@ -11,6 +11,7 @@ namespace NodeType
 		COLL = 2,
 		LINK = 4,
 		ELEM = 8,
+		TEST_POS = 16,
 		COUNT
 	};
 }
@@ -35,6 +36,7 @@ class ANode : public Object
 		void					unselect();
 		virtual void			setThickness(int v) = 0;
 		virtual void			act(int *data) { }
+		virtual bool			hide();
 //GLOBAL
 		static ANode			*getMouseTarget();
 		static void				selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool isSwitch = true);

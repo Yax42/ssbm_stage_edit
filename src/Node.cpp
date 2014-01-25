@@ -25,7 +25,7 @@ ANode::~ANode()
 void		ANode::globalDisplay()
 {
 	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end() ;++i)
-		if (g_window.m_tmp[3] < 1 || (g_window.m_tmp[3] & (*i)->m_type))
+		if (!(*i)->hide())
 			(*i)->display();
 }
 
@@ -50,11 +50,13 @@ ANode			*ANode::getMouseTarget()
 
 void			ANode::selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool isSwitch)
 {
-	sf::Vector2f	tl(Math::smallest(from.x, to.x), Math::smallest(from.y, to.y));
-	sf::Vector2f	br(Math::biggest(from.x, to.x), Math::biggest(from.y, to.y));
-	
+	bool onlyOne = (from.x == to.x && from.y == to.y);
+
+	sf::Vector2f	tl(Math::smallest(from.x, to.x - onlyOne * 2), Math::smallest(from.y, to.y - onlyOne * 2));
+	sf::Vector2f	br(Math::biggest(from.x, to.x + onlyOne * 2), Math::biggest(from.y, to.y + (onlyOne * 2)));
+
 	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
-		if (g_window.m_tmp[3] < 1 || (g_window.m_tmp[3] & (*i)->m_type))
+		if (!(*i)->hide())
 		if (tl.x < (*i)->x() + (*i)->size().x && br.x > (*i)->x()
 			&& tl.y < (*i)->y() + (*i)->size().y && br.y > (*i)->y())
 			{
@@ -62,7 +64,7 @@ void			ANode::selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool 
 					(*i)->switchSelect();
 				else
 					(*i)->select();
-				if (from.x == to.x && from.y == to.y)
+				if (onlyOne)
 					break;
 			}
 	if (SelectCount == 1)
@@ -81,7 +83,7 @@ void			ANode::clearSelections()
 void			ANode::moveSelect(const sf::Vector2f &delta)
 {
 	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
-		if (g_window.m_tmp[3] < 1 || (g_window.m_tmp[3] & (*i)->m_type))
+		if (!(*i)->hide())
 		if ((*i)->m_selected)
 		{
 			if ((*i)->m_type == NodeType::ELEM)
@@ -105,7 +107,7 @@ void			ANode::globalAct(int *data)
 		return ;
 	}
 	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
-		if (g_window.m_tmp[3] < 1 || (g_window.m_tmp[3] & (*i)->m_type))
+		if (!(*i)->hide())
 			if ((*i)->m_selected)
 				(*i)->act(data);
 }
@@ -117,6 +119,11 @@ void			ANode::select()
 	setThickness(1);
 	m_selected = true;
 	ANode::SelectCount++;
+}
+
+bool			ANode::hide()
+{
+	return (g_window.m_tmp[3] > 0 && !(g_window.m_tmp[3] & m_type));
 }
 
 void			ANode::unselect()

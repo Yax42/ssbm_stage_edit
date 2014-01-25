@@ -52,6 +52,7 @@ bool		Data::read(const std::string &name)
 	if (hFile == INVALID_HANDLE_VALUE) 
 	{ 
 		std::cout << "Error: unable to open " << name << std::endl;
+		assert(hFile != INVALID_HANDLE_VALUE);
 		return false;
 	}
 
@@ -160,20 +161,25 @@ void		Data::solveFileEndian()
 		fixEndian(m_intBuffer[i]);
 }
 
-void		Data::print(int idx, int count)
+ void		Data::print(int *idx, int count, bool fourOct)
+{
+	print (getId(idx), count);
+}
+
+void		Data::print(int idx, int count, bool fourOct)
 {
 	if (idx + count > m_fileSize)
 		return;
 	std::cout << "Index:\t" << idx << std::endl;
 	for (int i = 0; i < count; i++)
-		std::cout << i << "\t" <<  Math::binStr(*get<int>(idx, i)) << " int:" << *get<int>(idx, i) << " float:" << *get<float>(idx, i) << std::endl;
+		std::cout << (idx + 4 * i) / (fourOct ? 4 : 1) << "\t" <<  Math::binStr(*get<int>(idx, i)) << " int:" << *get<int>(idx, i) << " float:" << *get<float>(idx, i) << std::endl;
 }
 void	printTab(int count)
 {
 	for (int i = 0; i < count; i++)
 		std::cout << "\t";
 }
- void				Data::strongPrint(int idx, int count, int tab)
+ void				Data::strongPrint(int idx, int count, int deepLimit, int tab)
  {
 	std::cout << "Index:\t" << idx << std::endl;
 	if (idx + count > m_fileSize)
@@ -201,8 +207,8 @@ void	printTab(int count)
 				std::cout << "\t" << *data << std::endl;
 			}
 		}
-		else if (*data > 10000 && *data != 65536 && *data != 65537 && *data != 65792)
-			strongPrint(*data, count, tab + 1);
+		else if (*data > 10000 && *data != 65536 && *data != 65537 && *data != 65792 && tab < deepLimit)
+			strongPrint(*data, count, deepLimit, tab + 1);
 		else
 			std::cout << *data << std::endl;
 	}

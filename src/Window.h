@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "DynamicVar.h"
 
 #define g_window (*Window::Instance)
 
@@ -11,6 +12,17 @@ namespace Map
 namespace Coll
 {
 	class Node;
+}
+
+namespace Var
+{
+	enum
+	{
+		ID,
+		VAL,
+		TYPE,
+		FOCUS,
+	};
 }
 
 class Window
@@ -31,11 +43,13 @@ public:
 	sf::Vector2f			mousePos();
 	//sf::Vector2i			mousePos();
 	void					procEvent();
+	void					cleanEvent();
 	void					act();
 	void					draw(const sf::Drawable &drawable);
 	void					loop();
 	void					select();
 	void					display();
+
 public:
 	sf::RenderWindow		m_window;
 	sf::View				m_view;
@@ -57,4 +71,7 @@ public:
 	float					m_sizey;
 	float					m_zoom;
 	int						m_tmp[10];
+	DynamicVar				m_vars[10];
+
+	bool					m_focus;
 };
