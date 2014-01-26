@@ -101,9 +101,9 @@ void			ANode::moveSelect(const sf::Vector2f &delta)
 
 void			ANode::globalAct(int *data)
 {
-	if (SelectCount > 1)
+	if (SelectCount > 1 && !g_window.m_keyPressed[sf::Keyboard::LAlt])
 	{
-		std::cout << "More than one selection, that could be dangerous to modifie" << std::endl;
+		std::cout << "More than one selection, that could be dangerous to modifie, LAlt to force" << std::endl;
 		return ;
 	}
 	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)

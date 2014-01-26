@@ -25,7 +25,7 @@ bool	isOk(Image *img)
 bool	isOk(float v)
 {
 	int		*a = (int *)&v;
-	return (v == 0 || ((*a > 10000 || *a < -10000) && v < 1000.0 && v > -1000 && (v > 0.1 || v < -0.1)));
+	return (v == 0 || ((*a > 10000 || *a < -10000) && v < 10000.0 && v > -10000 && (v >= 0.1 || v <= -0.1)));
 }
 
 bool	isTriositionOk(int id)
@@ -36,11 +36,12 @@ bool	isTriositionOk(int id)
 				return false;
 
 		for (int j = 3; j < 6; j++)
-			if (*Data::get<float>(id, j) <= 0 || *Data::get<float>(id, j) > 50)
+			if (*Data::get<float>(id, j)  <= 0 || *Data::get<float>(id, j) > 50 ||  !isOk(*Data::get<float>(id, j)))
 				return false;
 
 		return (isOk(*Data::get<float>(id, 6)) &&
-			isOk(*Data::get<float>(id, 7)));
+			isOk(*Data::get<float>(id, 7)) && 
+			isOk(*Data::get<float>(id, 8)));
 #else
 		for (int j = 0; j < 9; j++)
 			if (!isOk(*Data::get<float>(id, j)))
@@ -81,7 +82,7 @@ bool		Worker::loadData()
 	int imgCount = 0;
 	int test = 0;
 	bool isFirst = true;
-	for (int i = 12; i < m_origin; i += 4)
+	for (int i = 0; i < m_origin; i += 4)
 	{
 		if (m_images.size() > imgCount && *m_images[imgCount]->m_deepPtr < i)
 		{
@@ -95,10 +96,14 @@ bool		Worker::loadData()
 		{
 			//if (i < 100000 || i > 110000) continue; if (isFirst){ isFirst = false; continue;} //NBa
 			//if (i < 60000 || i > 70000) continue; //NLa
+			//6 et 7 = eau
+			// 4 sol
+			if (i < 40000 || i > 50000) continue;
 
 			std::cout << test++ << "\t" << i << std::endl;
 			new TestPosition(Data::get<int>(i), name, imgCount);
 			i+=4;
+			//448.8
 		}
 		if (i >= CollData::m_ptr[CollData::LOCATIONS])
 			break;
