@@ -8,6 +8,8 @@
 
 bool			DynamicVar::m_dummy = false;
 bool			*DynamicVar::m_shift = &DynamicVar::m_dummy;
+bool			*DynamicVar::m_ctrl = &DynamicVar::m_dummy;
+bool			*DynamicVar::m_alt = &DynamicVar::m_dummy;
 Window	*Window::Instance = NULL;
 const int		Window::height = 600;
 const int		Window::width = 800;
@@ -42,6 +44,8 @@ Window::Window() : m_window(sf::RenderWindow(sf::VideoMode(width, height), "M.St
 	for (int i = 0; i < 10; i++)
 		m_tmp[i] = 0;
 	DynamicVar::m_shift = &m_keyPressed[sf::Keyboard::LShift];
+	DynamicVar::m_ctrl = &m_keyPressed[sf::Keyboard::LControl];
+	DynamicVar::m_alt = &m_keyPressed[sf::Keyboard::LAlt];
 	m_vars[0] = DynamicVar("id", m_tmp[0], m_justPressed[sf::Keyboard::W], m_justPressed[sf::Keyboard::S]);
 	m_vars[1] = DynamicVar("val", m_tmp[1], m_justPressed[sf::Keyboard::Q], m_justPressed[sf::Keyboard::A]);
 	m_vars[2] = DynamicVar("type", m_tmp[2], m_justPressed[sf::Keyboard::E], m_justPressed[sf::Keyboard::D]);

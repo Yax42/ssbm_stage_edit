@@ -25,7 +25,7 @@ bool	isOk(Image *img)
 bool	isOk(float v)
 {
 	int		*a = (int *)&v;
-	return (v == 0 || ((*a > 10000 || *a < -10000) && v < 10000.0 && v > -10000 && (v >= 0.1 || v <= -0.1)));
+	return (v == 0 || ((*a > 10000 || *a < -10000) && v < 10000.0 && v > -10000));// && (v >= 0.1 || v <= -0.1)));
 }
 
 bool	isTriositionOk(int id)
@@ -33,6 +33,7 @@ bool	isTriositionOk(int id)
 #if 1
 		for (int j = 0; j < 3; j++)
 			if (*Data::get<float>(id, j) != 0)
+			//if (!isOk(*Data::get<float>(id, j)))
 				return false;
 
 		for (int j = 3; j < 6; j++)
@@ -96,9 +97,8 @@ bool		Worker::loadData()
 		{
 			//if (i < 100000 || i > 110000) continue; if (isFirst){ isFirst = false; continue;} //NBa
 			//if (i < 60000 || i > 70000) continue; //NLa
-			//6 et 7 = eau
-			// 4 sol
-			if (i < 40000 || i > 50000) continue;
+			//if (i < 40000 || i > 50000) continue; // Shroom kingdom 2
+			//if (i < 540000 || i > 580000) continue; // Peach Castel
 
 			std::cout << test++ << "\t" << i << std::endl;
 			new TestPosition(Data::get<int>(i), name, imgCount);

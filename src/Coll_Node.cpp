@@ -86,4 +86,9 @@ namespace Coll
 	{
 		m_rect.setOutlineThickness(v);
 	}
+
+	void			Node::act(int *data)
+	{
+		m_position[data[0] != 0] = data[1];
+	}
 }

@@ -25,6 +25,8 @@ namespace Coll
 		void			updatePos();
 		void			printFlag(int idx);
 		virtual void	setThickness(int v);
+		virtual void	act(int *data);
+
 	public:
 		int					*m_ptr;
 		int					m_id;

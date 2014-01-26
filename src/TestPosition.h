@@ -38,11 +38,9 @@ public:
 		std::cout.precision(4);
 		printTab();
 		std::cout << m_id << " " << Data::getId(m_position) << "\t" << m_name <<
-					"\tX:" << m_position[LOCATIONX] <<
-					"\tY:" << m_position[LOCATIONY] <<
-					"\tScaleX:" << m_position[SCALEX] <<
-					"\tScaleY:" << m_position[SCALEY] <<
-					"\t:" << m_position[ANGLEX] << std::endl;
+					" Angle: " << m_position[ANGLEX] << ", " << m_position[ANGLEY] << ", " << m_position[ANGLEZ] <<
+					" Scale: " << m_position[SCALEX] << ", " << m_position[SCALEY] << ", " << m_position[SCALEZ] <<
+					" Pos: " << m_position[LOCATIONX] << ", " << m_position[LOCATIONY] << ", " << m_position[LOCATIONZ] << std::endl;
 	}
 	virtual void	display()
 	{
@@ -60,12 +58,9 @@ public:
 	}
 	virtual void			act(int *data)
 	{
-		if (data[1] < 0)
+		if (data[0] < 0 || data[0] > COUNT)
 			return;
-		if (data[0] == 0)
-			m_position[SCALEX] = data[1] / 10.0;
-		else
-			m_position[SCALEY] = data[1] / 10.0;
+		m_position[data[0]] = data[1] / 10.0;
 	}
 	virtual float			x() const { return m_position[LOCATIONX]; }
 	virtual float			y() const { return m_position[LOCATIONY]; }
