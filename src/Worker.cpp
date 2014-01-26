@@ -28,6 +28,28 @@ bool	isOk(float v)
 	return (v == 0 || ((*a > 10000 || *a < -10000) && v < 1000.0 && v > -1000 && (v > 0.1 || v < -0.1)));
 }
 
+bool	isTriositionOk(int id)
+{
+#if 1
+		for (int j = 0; j < 3; j++)
+			if (*Data::get<float>(id, j) != 0)
+				return false;
+
+		for (int j = 3; j < 6; j++)
+			if (*Data::get<float>(id, j) <= 0 || *Data::get<float>(id, j) > 50)
+				return false;
+
+		return (isOk(*Data::get<float>(id, 6)) &&
+			isOk(*Data::get<float>(id, 7)));
+#else
+		for (int j = 0; j < 9; j++)
+			if (!isOk(*Data::get<float>(id, j)))
+				return false;
+		return true;
+#endif
+
+}
+
 bool		Worker::loadData()
 {
 	if (Data::getHeader() == NULL)
@@ -69,29 +91,13 @@ bool		Worker::loadData()
 		if (imgCount > 0 && !isOk(m_images[imgCount - 1]))
 			continue;
 
-			/*
-		if (*Data::get<float>(i, -3) == 0 &&
-			*Data::get<float>(i, -2) == 0 &&
-			*Data::get<float>(i, -1) == 0)
-		if (*Data::get<float>(i) == 1.0 &&
-			*Data::get<float>(i, 1) == 1.0 &&
-			*Data::get<float>(i, 2) == 1.0 &&
-			isOk(*Data::get<float>(i, 3)) &&
-			isOk(*Data::get<float>(i, 4)))
-			*/
-		bool	ok = true;
-		for (int j = 0; j < 9; j++)
-			if (!isOk(*Data::get<float>(i, j)))
-				ok = false;
-
-		if (ok)
+		if (isTriositionOk(i))
 		{
-			//if (i < 100000 || i > 110000) continue; NBa
-			if (i < 60000 || i > 70000) continue; //NLa
-			if (isFirst){ isFirst = false; continue;}
+			//if (i < 100000 || i > 110000) continue; if (isFirst){ isFirst = false; continue;} //NBa
+			//if (i < 60000 || i > 70000) continue; //NLa
 
 			std::cout << test++ << "\t" << i << std::endl;
-			new TestPosition(Data::get<int>(i, 6), name, imgCount);
+			new TestPosition(Data::get<int>(i), name, imgCount);
 			i+=4;
 		}
 		if (i >= CollData::m_ptr[CollData::LOCATIONS])

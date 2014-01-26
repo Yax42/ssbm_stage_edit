@@ -7,12 +7,12 @@ class TestPosition : public ANode
 public:
 	enum
 	{
-		SCALEX,
-		SCALEY,
-		SCALEZ,
 		ANGLEX,
 		ANGLEY,
 		ANGLEZ,
+		SCALEX,
+		SCALEY,
+		SCALEZ,
 		LOCATIONX,
 		LOCATIONY,
 		LOCATIONZ,
@@ -40,7 +40,8 @@ public:
 		std::cout << m_id << " " << Data::getId(m_position) << "\t" << m_name <<
 					"\tX:" << m_position[LOCATIONX] <<
 					"\tY:" << m_position[LOCATIONY] <<
-					"\tScale:" << m_position[SCALEX] <<
+					"\tScaleX:" << m_position[SCALEX] <<
+					"\tScaleY:" << m_position[SCALEY] <<
 					"\t:" << m_position[ANGLEX] << std::endl;
 	}
 	virtual void	display()
@@ -49,8 +50,23 @@ public:
 		g_window.draw(m_rect);
 	}
 	virtual void			updatePos() { m_rect.setPosition(x() - size().x, y() - size().x); }
-	virtual void			x(float x) { m_position[LOCATIONX] = x; }
-	virtual void			y(float y) { m_position[LOCATIONY] = y; }
+	virtual void			x(float x)
+	{
+		m_position[LOCATIONX] += x;
+	}
+	virtual void			y(float y)
+	{
+		m_position[LOCATIONY] += y;
+	}
+	virtual void			act(int *data)
+	{
+		if (data[1] < 0)
+			return;
+		if (data[0] == 0)
+			m_position[SCALEX] = data[1] / 10.0;
+		else
+			m_position[SCALEY] = data[1] / 10.0;
+	}
 	virtual float			x() const { return m_position[LOCATIONX]; }
 	virtual float			y() const { return m_position[LOCATIONY]; }
 	virtual void			setThickness(int v) { m_rect.setOutlineThickness(v); }

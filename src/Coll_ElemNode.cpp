@@ -87,12 +87,18 @@ namespace Coll
 	}
 	void			ElemNode::x(float x)
 	{
-		m_floatPtr[(g_window.m_tmp[0] != 0) * 2] += x;
+		if (g_window.m_tmp[0] != 1)
+			m_floatPtr[0] += x;
+		if (g_window.m_tmp[0] == 1 || g_window.m_tmp[0] == 0)
+			m_floatPtr[2] += x;
 	}
 
 	void			ElemNode::y(float y)
 	{
-		m_floatPtr[(g_window.m_tmp[0] != 0) * 2 + 1] += y;
+		if (g_window.m_tmp[0] != 1)
+			m_floatPtr[1] += y;
+		if (g_window.m_tmp[0] == 1 || g_window.m_tmp[0] == 0)
+			m_floatPtr[3] += y;
 	}
 
 	void			ElemNode::updatePos(){}

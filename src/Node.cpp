@@ -86,7 +86,7 @@ void			ANode::moveSelect(const sf::Vector2f &delta)
 		if (!(*i)->hide())
 		if ((*i)->m_selected)
 		{
-			if ((*i)->m_type == NodeType::ELEM)
+			if ((*i)->m_type == NodeType::ELEM || (*i)->m_type == NodeType::TEST_POS)
 			{
 				(*i)->x(delta.x);
 				(*i)->y(delta.y);
