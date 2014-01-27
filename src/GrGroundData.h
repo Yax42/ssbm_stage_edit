@@ -68,11 +68,11 @@ public:
 		INT1,
 		INT2,
 		INT3,
-		CAMERA_ANGLEX,
-		CAMERA_ANGLEY,
-		CAMERA_SCALEX,
-		CAMERA_SCALEY,
-		FLOAT2,
+		ROTATION_FACTORX,
+		ROTATION_FACTORY,
+		FIXNESS,
+		FLOAT_,
+		SMOOTH,
 		INT4,
 		INT5,
 		INT6,
@@ -92,6 +92,16 @@ public:
 	};
 
 
+	enum
+	{
+		CAM_ROTATION_FACTORX = 6,
+		CAM_ROTATION_FACTORY,
+		CAM_FIXNESS,
+		CAM_FLOAT,
+		CAM_SMOOTH,
+		CAM_COUNT
+	};
+
 private:
 	GrGroundData();
 	~GrGroundData();
@@ -100,10 +110,10 @@ public:
 	static void			print();
 	static void			display();
 	static void			clean();
+	static void			act();
 public:
 	static int									*m_ptr;
+	static float								*m_floatPtr;
 	static int									*m_deepPtr;
 	//static std::vector<Map::ObjectGroup *>		m_groups;
-
-
 };

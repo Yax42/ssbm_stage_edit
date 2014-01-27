@@ -20,7 +20,7 @@ public:
 			MapHead::load(m_deepPtr);
 		if (isEqual("coll_data"))
 			CollData::load(m_deepPtr);
-		if (isEqual("grGroundData"))
+		if (isEqual("grGroundParam"))
 			GrGroundData::load(m_deepPtr);
 	}
 	~Image(){}

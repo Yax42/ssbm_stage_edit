@@ -5,6 +5,7 @@
 #include "MapHead.h"
 #include "Worker.h"
 #include "Coll_Node.h"
+#include "GrGroundData.h"
 
 bool			DynamicVar::m_dummy = false;
 bool			*DynamicVar::m_shift = &DynamicVar::m_dummy;
@@ -137,6 +138,10 @@ void					Window::act()
 					CollData::m_elems[m_tmp[Var::VAL]]->select();
 			}
 		}
+		if (m_tmp[Var::TYPE] == -2)
+			GrGroundData::act();
+
+			
 		else
 			ANode::globalAct(m_tmp);
 	}
