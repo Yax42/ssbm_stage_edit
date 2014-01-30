@@ -35,7 +35,7 @@ public:
 		//print();
 		if (isEqual("map_head"))
 		{
-			Data::print(m_ptr, 100);
+			//Data::print(m_ptr, 100);
 
 			//for (int i = 0; i < 4; i++) m_ptr[i] = 0;
 

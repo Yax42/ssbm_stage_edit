@@ -16,7 +16,13 @@ public:
 	{
 		if (m_val == NULL)
 			return;
-		float factor = *m_alt ? 1000 : *m_ctrl ? 100 : *m_shift ? 10 : 1;
+		float factor =	  (*m_alt && *m_ctrl) ? 1000000
+						: (*m_alt && *m_shift) ? 100000
+						: (*m_ctrl && *m_shift) ? 10000
+						: *m_alt ? 1000
+						: *m_ctrl ? 100
+						: *m_shift ? 10
+						: 1;
 		*m_val += (*m_inc - *m_dec) * factor;
 		if (*m_inc || *m_dec)
 			print();

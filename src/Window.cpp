@@ -140,6 +140,8 @@ void					Window::act()
 		}
 		if (m_tmp[Var::TYPE] == -2)
 			GrGroundData::act();
+		if (m_tmp[Var::TYPE] == -3)
+			Data::m_globalFileSize = m_tmp[Var::VAL];
 
 			
 		else

@@ -9,6 +9,7 @@
 #include "Data.h"
 #include "MyMath.h"
 
+int				Data::m_globalFileSize = 0;
 Byte			*Data::m_buffer = NULL;
 int				*Data::m_intBuffer = NULL;
 int				Data::m_fileSize;	//0x00
@@ -141,6 +142,25 @@ bool		Data::write(const std::string &name)
 			return false;
 		}
 	}
+	int	dummy = 0;
+	for (int i = m_fileSize; i < m_globalFileSize; i++)
+	{
+		bErrorFlag = WriteFile( 
+						hFile,           // open file handle
+						&dummy,      // start of data to write
+						1,  // number of bytes to write
+						&bytesWritten, // number of bytes that were written
+						NULL);            // no overlapped structure
+
+		if (FALSE == bErrorFlag)
+		{
+			std::cout << "Error: unable to write on " << name << std::endl;
+			CloseHandle(hFile);
+			solveFileEndian();
+			return false;
+		}
+	}
+
 	CloseHandle(hFile);
 	solveFileEndian();
 	return true;

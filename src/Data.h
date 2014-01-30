@@ -38,6 +38,7 @@ private:
 
 	static Byte						*m_data;
 public:
+	static int						m_globalFileSize;
 	static int						m_fileSize;
 	static int						m_stringPtr;
 	static int						Dummy[100];

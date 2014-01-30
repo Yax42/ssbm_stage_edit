@@ -102,12 +102,22 @@ bool		Worker::loadData()
 
 			std::cout << test++ << "\t" << i << std::endl;
 			new TestPosition(Data::get<int>(i), name, imgCount);
-			i+=4;
+			i+=8*4;
 			//448.8
 		}
-		if (i >= CollData::m_ptr[CollData::LOCATIONS])
-			break;
+		//if (i >= CollData::m_ptr[CollData::LOCATIONS])
+		//	break;
 	}
+	/*
+	int count = 0;
+	for (int i = 0; i < m_origin; i += 4)
+		if (*Data::get<float>(i) == 5)
+		{
+			//int a = *Data::get<int>(i);
+			*Data::get<float>(i) = 1;
+			count++;
+		}
+		*/
 	return true;
 }
 
