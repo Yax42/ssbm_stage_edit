@@ -67,6 +67,8 @@ bool		Worker::loadData()
 	Data::solveEndianTo(m_strOrigin);
 	Data::m_stringPtr = m_strOrigin + 0x20;
 
+	//for (int i = 0; i < m_header[NB_TABLE]; i++) { std::cout << i << "\t" << *Data::get<int>(m_header[TABLE_PTR] + i * 4) << std::endl; }
+
 	for (int i = 0; i < m_header[NB_BASE]; i++)
 		m_images[i] = new Image(m_origin + i * 8, m_strOrigin);
 
