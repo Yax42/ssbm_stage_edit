@@ -4,6 +4,7 @@
 
 namespace Map
 {
+	class ObjectGroup;
 	class Node : public ANode
 	{
 	public:
@@ -28,17 +29,17 @@ namespace Map
 			COUNT
 		};
 	public:
-		Node(int *ptr, int deep, Node *mother);
+		Node(int *ptr, int deep, Node *mother, ObjectGroup &father, int idx);
 		~Node();
 		virtual void	print();
 		virtual void	display();
+		virtual void			act(int *data);
 		float			x() const;
 		float			y() const;
 		void			x(float x);
 		void			y(float y);
 		void			updateFamilyPos();
-		void			updatePos();
-		sf::Vector2f	size() { return sf::Vector2f(/*m_floatData[SIZEX]*/1 * m_sizeFactor, /*m_floatData[SIZEY]*/1 * m_sizeFactor); }
+		virtual void	onUpdatePos();
 		void			printOnly();
 		virtual void	setThickness(int v);
 
@@ -53,5 +54,6 @@ namespace Map
 		static int			MotherCount;
 		static char			*Names[17];
 		std::string			m_name;
+		int					m_count;
 	};
 }

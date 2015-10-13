@@ -10,7 +10,6 @@ namespace Map
 	class ObjectGroup : public Object
 	{
 	public:
-		static int		tmp;
 		static bool		Dummy;
 	public:
 		ObjectGroup(int *ptr, int *id, int deep = 0);
@@ -20,7 +19,7 @@ namespace Map
 		
 	public:
 		int		*m_ptr;
-		int		*m_id;
+		int		m_id;
 		int		*m_ptrToHeadNode;
 		int		*m_unknown1;
 		int		*m_unknown2;

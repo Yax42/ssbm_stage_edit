@@ -70,6 +70,7 @@ public:
 	float					m_sizex;
 	float					m_sizey;
 	float					m_zoom;
+	float					m_zoomTotal;
 	int						m_tmp[10];
 	DynamicVar				m_vars[10];
 

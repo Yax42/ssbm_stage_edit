@@ -6,8 +6,8 @@ namespace Map
 	int			Node::MotherCount;
 	char		*Node::Names[17] =
 	{
-		"",
-		"",
+		"0",
+		"0",
 		"Left/top camera boundary",
 		"Right/bottom camera boundary",
 		"Left/top blast zone",
@@ -25,14 +25,13 @@ namespace Map
 		"Spawn player 4"
 	};
 
-	Node::Node(int *ptr, int deep, Node *mother) : ANode(deep)
+	Node::Node(int *ptr, int deep, Node *mother, ObjectGroup &father, int idx) : ANode(deep, &m_rect)
 	{
 		m_type = NodeType::MAP;
-		if (ObjectGroup::tmp < 17)
-			m_name = Names[ObjectGroup::tmp];
-		else
-			m_name = "";
-		ObjectGroup::tmp++;
+		if (idx < 17 && father.m_id == 3 && deep == 2)
+			//m_name = Names[idx];
+		;//else
+			m_name = std::to_string(idx);
 		m_ptr = ptr;
 
 		if (*ptr >= Data::m_fileSize || *ptr < 0)
@@ -60,20 +59,27 @@ namespace Map
 			//std::cout << m_intData[Node::EMPTY1] << std::endl;
 			if (m_intData[CHILD_PTR] != 0)
 			{
-				m_child = new Node(&m_intData[CHILD_PTR], deep + 1, this);
-				m_sizeFactor = 2;
+				m_child = new Node(&m_intData[CHILD_PTR], deep + 1, this, father, 0);
+				m_sizeFactor = 2.f;
 				MotherCount++;
+				m_count = m_child->m_count;
 			}
 			else
 			{
 				m_child = NULL;
-				m_sizeFactor = 4;
+				m_sizeFactor = 4.f;
 			}
 			m_rect.setSize(size());
 			if (m_intData[NEXT_PTR] != 0)
-				m_next = new Node(&m_intData[NEXT_PTR], deep, m_mother);
+			{
+				m_next = new Node(&m_intData[NEXT_PTR], deep, m_mother, father, idx + 1);
+				m_count = m_next->m_count;
+			}
 			else
+			{
+				m_count = idx + 1;
 				m_next = NULL;
+			}
 		}
 	}
 
@@ -90,21 +96,27 @@ namespace Map
 		std::cout.precision(4);
 		printTab();
 		if (m_name.length() > 0)
-			std::cout << "Node " << m_name << std::endl;
+			std::cout << "Node " << m_name;
 		printTab();
-		std::cout <<"Z" << m_intData[EMPTY1]
-				<< " Flags:" << m_intData[FLAGS]
+		std::cout
+			//		<<"Z" << m_intData[EMPTY1]
+				<< " Flag1:" << *((short*) &m_intData[FLAGS])
+				<< " Flag2:" << *(((short*) &m_intData[FLAGS]) + 1)
 				<< " Child:" << m_intData[CHILD_PTR]
 				<< " Next:" << m_intData[NEXT_PTR]
 				<< " Data:" << m_intData[DATA_PTR]
 				<< " Inverse:" << m_intData[INVERSE]
-				<< " Z" << m_intData[EMPTY2] << std::endl;
+		//		<< " Z" << m_intData[EMPTY2]
+		//		<< " Depth " << m_deep
+				<< std::endl;
+#if 0 // print transformation
 		printTab();
 		std::cout << "\tRotate:\t\tX" << m_floatData[ROTATEX] << "\tY" << m_floatData[ROTATEY] << "\tZ" << m_floatData[ROTATEZ] << std::endl;
 		printTab();
-		std::cout << "\tSize:\t\tX" << m_floatData[SIZEX] << "\tY" << m_floatData[SIZEY] << "\tZ" << m_floatData[SIZEZ] << std::endl;
+		std::cout << "\tScale:\t\tX" << m_floatData[SIZEX] << "\tY" << m_floatData[SIZEY] << "\tZ" << m_floatData[SIZEZ] << std::endl;
 		printTab();
 		std::cout << "\tPosition:\tX" << m_floatData[LOCATIONX] << "\tY" << m_floatData[LOCATIONY] << "\tZ" << m_floatData[LOCATIONZ] << std::endl;
+#endif
 		if (false && m_intData[DATA_PTR] != 0)
 		{
 			Data::strongPrint(m_intData[DATA_PTR]);
@@ -122,7 +134,6 @@ namespace Map
 
 	void		Node::display()
 	{
-		updatePos();
 		g_window.draw(m_rect);
 		if (m_child != NULL)
 			m_child->display();
@@ -137,9 +148,8 @@ namespace Map
 			m_next->updateFamilyPos();
 	}
 
-	void			Node::updatePos()
+	void			Node::onUpdatePos()
 	{
-		m_rect.setPosition(x(), y());
 		if (m_child != NULL)
 		{
 			m_child->updateFamilyPos();
@@ -153,7 +163,6 @@ namespace Map
 		if (m_mother != NULL)
 			x -= m_mother->x();
 		m_floatData[LOCATIONX] = x;
-		updatePos();
 	}
 
 	void			Node::y(float y)
@@ -161,7 +170,6 @@ namespace Map
 		if (m_mother != NULL)
 			y -= m_mother->y();
 		m_floatData[LOCATIONY] = y;
-		updatePos();
 	}
 
 	float			Node::x() const
@@ -183,5 +191,13 @@ namespace Map
 	void			Node::setThickness(int v)
 	{
 		m_rect.setOutlineThickness(v);
+	}
+
+
+	void			Node::act(int *data)
+	{
+		if (data[0] < 0 || data[0] > COUNT)
+			return;
+		m_floatData[data[0]] = data[1] / 10.0;
 	}
 }

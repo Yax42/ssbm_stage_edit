@@ -22,7 +22,6 @@ namespace Coll
 		float			y() const;
 		void			x(float x);
 		void			y(float y);
-		void			updatePos();
 		void			printFlag(int idx);
 		virtual void	setThickness(int v);
 		virtual void	act(int *data);

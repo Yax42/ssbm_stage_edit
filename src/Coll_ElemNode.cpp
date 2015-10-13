@@ -4,21 +4,19 @@
 
 namespace Coll
 {
-	ElemNode::ElemNode(int *ptr, int id) : ANode(0)
+	ElemNode::ElemNode(int *ptr, int id) : ANode(0, &m_centerShape)
 	{
 		m_type = NodeType::ELEM;
 		m_ptr = ptr;
 		m_shortPtr = (short *) m_ptr;
 		m_floatPtr = (float *) &m_ptr[X1];
 		m_id = id;
-		m_sizeFactor = 1;
+		m_sizeFactor = 3;
 
 		m_shape.setFillColor(sf::Color::Green);
 
-		m_centerShape.setFillColor(sf::Color::Transparent);
-		m_centerShape.setOutlineColor(sf::Color::Red);
-		m_centerShape.setOutlineThickness(1);
-		m_centerShape.setSize(sf::Vector2f(1, 1));
+		m_centerShape.setFillColor(sf::Color::Red);
+		m_centerShape.setSize(size());
 	}
 
 	ElemNode::~ElemNode()
@@ -50,6 +48,7 @@ namespace Coll
 
 	void			ElemNode::display()
 	{
+#if 0
 		for (int j = 0; j < 5; j++)
 		{
 			if (m_shortPtr[2 * j])
@@ -60,6 +59,7 @@ namespace Coll
 				g_window.draw(m_shape);
 			}
 		}
+#endif
 
 		for (int j = 0; j < 4; j++)
 		{
@@ -67,13 +67,18 @@ namespace Coll
 			line[1] = sf::Vertex(sf::Vector2f(m_floatPtr[(j % 2) * 2], m_floatPtr[(1 - (j / 2)) * 2 + 1]));
 
 			if (m_selected)
-				line->color = sf::Color::Red;
+			{
+				line[0].color = sf::Color::Red;
+				line[1].color = sf::Color::Red;
+			}
 			else
-				line->color = sf::Color::Magenta;
+			{
+				line[0].color = sf::Color::Magenta;
+				line[1].color = sf::Color::Magenta;
+			}
 
 			g_window.m_window.draw(line, 2, sf::Lines);
 		}
-		m_centerShape.setPosition(x(), y());
 		g_window.draw(m_centerShape);
 	}
 
@@ -105,6 +110,7 @@ namespace Coll
 
 	void			ElemNode::setThickness(int v)
 	{
+		m_centerShape.setOutlineThickness(v);
 	}
 
 	void			ElemNode::act(int *data)

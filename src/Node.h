@@ -19,7 +19,7 @@ namespace NodeType
 class ANode : public Object
 {
 	public:
-		ANode(int deep);
+		ANode(int deep, sf::Shape *shape);
 		virtual ~ANode();
 		virtual void			printOnly() { print(); };
 		virtual void			print() = 0;
@@ -29,20 +29,26 @@ class ANode : public Object
 		virtual float			y() const = 0;
 		virtual void			x(float x) = 0;
 		virtual void			y(float y) = 0;
-		virtual void			updatePos() = 0;
-		virtual sf::Vector2f	size() { return sf::Vector2f(m_sizeFactor, m_sizeFactor); }
+		virtual void			onUpdatePos() {}
+		virtual sf::Vector2f	size() { return sf::Vector2f(m_sizeFactor * 4, m_sizeFactor * 4); }
+		sf::Vector2f			scaledSize() { return size() * Scale; }
+		sf::Vector2f			center();
 		void					switchSelect();
 		void					select();
 		void					unselect();
 		virtual void			setThickness(int v) = 0;
 		virtual void			act(int *data) { }
+		void					updatePos();
+
+		void					setScale(float s);
 		virtual bool			hide();
 //GLOBAL
-		static ANode			*getMouseTarget();
-		static void				selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool isSwitch = true);
+		static void				getMouseTarget(bool isSwitch);
+		static void				selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool isSwitch, bool onlyOne);
 		static void				globalDisplay();
 		static void				clearSelections();
 		static void				globalAct(int *data);
+		static void				globalSetScale(float s);
 
 	public:
 		float							m_sizeFactor;
@@ -51,4 +57,9 @@ class ANode : public Object
 		static std::vector<ANode *>		NodesList;
 		static void						moveSelect(const sf::Vector2f &delta);
 		static int						SelectCount;
+	private:
+		sf::Shape				*m_shape;
+		static float					Scale;
+
+
 };

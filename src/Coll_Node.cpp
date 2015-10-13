@@ -4,7 +4,7 @@
 
 namespace Coll
 {
-	Node::Node(int *ptr, int id, int deep) : ANode(deep)
+	Node::Node(int *ptr, int id, int deep) : ANode(deep, &m_rect)
 	{
 		m_type = NodeType::COLL;
 		m_id = id;
@@ -53,13 +53,7 @@ namespace Coll
 
 	void		Node::display()
 	{
-		updatePos();
 		g_window.draw(m_rect);
-	}
-
-	void			Node::updatePos()
-	{
-		m_rect.setPosition(x() - size().x, y() - size().x);
 	}
 
 	void			Node::x(float x)

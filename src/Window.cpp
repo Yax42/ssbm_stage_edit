@@ -21,8 +21,10 @@ void		Window::init()
 		Instance = new Window();
 }
 
-Window::Window() : m_window(sf::RenderWindow(sf::VideoMode(width, height), "M.StEdix")), m_view()
+Window::Window() : m_window(sf::VideoMode(width, height), "Melee mapping"), m_view()
 {
+	m_zoomTotal = 1;
+	m_focus = true;
 	m_isSelecting = false;
 	m_selectShape.setFillColor(sf::Color::Transparent);
 	m_selectShape.setOutlineColor(sf::Color::Red);
@@ -88,7 +90,7 @@ void					Window::act()
 		m_isSelecting = false;
 		if (!m_keyPressed[sf::Keyboard::LControl] && !m_keyPressed[sf::Keyboard::RControl])
 			ANode::clearSelections();
-		ANode::selectArea(sf::Vector2f(m_fromx, m_fromy), sf::Vector2f(m_fromx + m_sizex, m_fromy + m_sizey));
+		ANode::selectArea(sf::Vector2f(m_fromx, m_fromy), sf::Vector2f(m_fromx + m_sizex, m_fromy + m_sizey), true, m_keyPressed[sf::Keyboard::LShift]);
 	}
 
 	if (m_mouse[sf::Mouse::Right])
@@ -138,12 +140,10 @@ void					Window::act()
 					CollData::m_elems[m_tmp[Var::VAL]]->select();
 			}
 		}
-		if (m_tmp[Var::TYPE] == -2)
+		else if (m_tmp[Var::TYPE] == -2)
 			GrGroundData::act();
-		if (m_tmp[Var::TYPE] == -3)
+		else if (m_tmp[Var::TYPE] == -3)
 			Data::m_globalFileSize = m_tmp[Var::VAL];
-
-			
 		else
 			ANode::globalAct(m_tmp);
 	}
@@ -155,19 +155,22 @@ void					Window::act()
 	//--------------------------
 	//--------------------------
 
-	if (m_wheelDelta != 0)
+	if (m_wheelDelta != 0 && m_keyPressed[sf::Keyboard::LControl])
 	{
-		float	zoom = 1 - Math::sgn(m_wheelDelta) * 0.2;
+		float	deltaZoom = 1 - Math::sgn(m_wheelDelta) * 0.2;
 		int		time = Math::abs(m_wheelDelta);
-		m_zoom = zoom;
-		m_view.zoom(Math::pow(zoom, time));
+		m_zoom = Math::pow(deltaZoom, time);
+		m_view.zoom(m_zoom);
+		m_zoomTotal *= m_zoom;
 		m_window.setView(m_view);
+		ANode::globalSetScale(m_zoomTotal);
+		m_selectShape.setOutlineThickness(m_zoomTotal * 2);
 	}
 
 	//Save
 	if (m_justPressed[sf::Keyboard::Delete])
 	{
-		if (Data::write("../test.dat"))
+		if (Data::write("../data/test.dat"))
 			std::cout << "saved" << std::endl;
 		else
 			std::cout << "failed save" << std::endl;
@@ -190,7 +193,7 @@ void					Window::procEvent()
 	sf::Event			ev;
 	cleanEvent();
 
-	while (m_window.pollEvent(ev));
+	while (m_window.pollEvent(ev))
 	{
 		switch (ev.type)
 		{
@@ -209,8 +212,8 @@ void					Window::procEvent()
 				m_mousePos.x = ev.mouseMove.x;
 				m_mousePos.y = ev.mouseMove.y;
 				break;
-			case sf::Event::MouseWheelMoved:
-				m_wheelDelta = ev.mouseWheel.delta;
+			case sf::Event::MouseWheelScrolled:
+				m_wheelDelta = ev.mouseWheelScroll.delta;
 				break;
 				/*
 			case sf::Event::MouseButtonPressed:
@@ -252,7 +255,7 @@ void					Window::procEvent()
 			m_mouse[i] = false;
 	}
 	m_mousePosFloat = m_window.mapPixelToCoords(m_mousePos);
-	m_deltaMouseFloat = sf::Vector2f(m_deltaMousePos.x * m_zoom, m_deltaMousePos.y * m_zoom);
+	m_deltaMouseFloat = sf::Vector2f(m_deltaMousePos.x * m_zoomTotal * 2, m_deltaMousePos.y * m_zoomTotal * 2);
 	if (m_focus == false)
 		cleanEvent();
 }

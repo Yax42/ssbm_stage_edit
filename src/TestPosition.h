@@ -19,7 +19,7 @@ public:
 		COUNT
 	};
 public:
-	TestPosition(int *ptr, const std::string &name, int id) : ANode(0)
+	TestPosition(int *ptr, const std::string &name, int id) : ANode(0, &m_rect)
 	{
 		m_id = id;
 		m_name = name;
@@ -29,7 +29,7 @@ public:
 		m_rect.setPosition(pos());
 		m_rect.setFillColor(sf::Color(m_id * 32, (m_id % 3) * 80, 255, 255));
 
-		m_sizeFactor = 3;
+		m_sizeFactor = 1;
 		m_rect.setRadius(size().x);
 	}
 	~TestPosition() {}
@@ -44,10 +44,8 @@ public:
 	}
 	virtual void	display()
 	{
-		updatePos();
 		g_window.draw(m_rect);
 	}
-	virtual void			updatePos() { m_rect.setPosition(x() - size().x, y() - size().x); }
 	virtual void			x(float x)
 	{
 		m_position[LOCATIONX] += x;

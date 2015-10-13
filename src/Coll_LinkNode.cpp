@@ -4,7 +4,7 @@
 
 namespace Coll
 {
-	LinkNode::LinkNode(int *ptr, int id) : ANode(0)
+	LinkNode::LinkNode(int *ptr, int id) : ANode(0, NULL)
 	{
 		m_type = NodeType::LINK;
 		m_ptr = ptr;
@@ -59,28 +59,36 @@ namespace Coll
 		if (!m_correct)
 			return;
 
-		line[0] = sf::Vertex(getNodePos(LINK1_F)),
-		line[1] = sf::Vertex(getNodePos(LINK1_T));
+		m_line[0] = sf::Vertex(getNodePos(LINK1_F)),
+		m_line[1] = sf::Vertex(getNodePos(LINK1_T));
 		if (m_selected)
-			line->color = sf::Color::Yellow;
+		{
+			m_line[0].color = sf::Color::Green;
+			m_line[1].color = sf::Color::Green;
+		}
 		else
-			line->color = sf::Color::Cyan;
-		g_window.m_window.draw(line, 2, sf::Lines);
+		{
+			m_line[1].color = sf::Color::Cyan;
+			m_line[0].color = sf::Color::Cyan;
+		}
+		g_window.m_window.draw(m_line, 2, sf::Lines);
 
 		if (m_shortPtr[LINK2_F] != -1)
 		{
-			line[0] = sf::Vertex(pos());
-			line[1] = sf::Vertex(getLinkPos(LINK2_F)),
-			line->color = sf::Color(0,0,128, 128);
-			g_window.m_window.draw(line, 2, sf::Lines);
+			m_line[0] = sf::Vertex(pos());
+			m_line[1] = sf::Vertex(getLinkPos(LINK2_F));
+			m_line[0].color = sf::Color(0,128,0, 255);
+			m_line[1].color = sf::Color(0,128,0, 255);
+			g_window.m_window.draw(m_line, 2, sf::Lines);
 		}
 
 		if (m_shortPtr[LINK2_T] != -1)
 		{
-			line[0] = sf::Vertex(pos());
-			line[1] = sf::Vertex(getLinkPos(LINK2_T));
-			line->color = sf::Color(128,0,0, 128);
-			g_window.m_window.draw(line, 2, sf::Lines);
+			m_line[0] = sf::Vertex(pos());
+			m_line[1] = sf::Vertex(getLinkPos(LINK2_T));
+			m_line[0].color = sf::Color(0,128,0, 255);
+			m_line[1].color = sf::Color(0,128,0, 255);
+			g_window.m_window.draw(m_line, 2, sf::Lines);
 		}
 	}
 
@@ -110,9 +118,9 @@ namespace Coll
 	void			LinkNode::setThickness(int v)
 	{
 		if (v > 0)
-			line[1].color = sf::Color::White;
+			m_line[1].color = sf::Color::White;
 		else
-			line[1].color = sf::Color::Blue;
+			m_line[1].color = sf::Color::Blue;
 	}
 
 	void			LinkNode::act(int *data)

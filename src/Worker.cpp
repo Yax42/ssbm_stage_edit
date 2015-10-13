@@ -31,14 +31,14 @@ bool	isOk(float v)
 bool	isTriositionOk(int id)
 {
 #if 1
-		for (int j = 0; j < 3; j++)
-			if (*Data::get<float>(id, j) != 0)
+	for (int j = 0; j < 3; j++)
+		if (*Data::get<float>(id, j) != 0)
 			//if (!isOk(*Data::get<float>(id, j)))
-				return false;
+			;//return false;
 
-		for (int j = 3; j < 6; j++)
-			if (*Data::get<float>(id, j)  <= 0 || *Data::get<float>(id, j) > 50 ||  !isOk(*Data::get<float>(id, j)))
-				return false;
+	for (int j = 3; j < 6; j++)
+		if (*Data::get<float>(id, j) <= 0 || *Data::get<float>(id, j) > 50 || !isOk(*Data::get<float>(id, j)))
+			;//return false;
 
 		return (isOk(*Data::get<float>(id, 6)) &&
 			isOk(*Data::get<float>(id, 7)) && 
@@ -85,12 +85,15 @@ bool		Worker::loadData()
 	int imgCount = 0;
 	int test = 0;
 	bool isFirst = true;
+	int imageOrigin = 0;
 	for (int i = 0; i < m_origin; i += 4)
 	{
+
 		if (m_images.size() > imgCount && *m_images[imgCount]->m_deepPtr < i)
 		{
 			name = m_images[imgCount]->m_str;
 			imgCount++;
+			imageOrigin = i;
 		}
 		if (imgCount > 0 && !isOk(m_images[imgCount - 1]))
 			continue;
@@ -102,8 +105,8 @@ bool		Worker::loadData()
 			//if (i < 40000 || i > 50000) continue; // Shroom kingdom 2
 			//if (i < 540000 || i > 580000) continue; // Peach Castel
 
-			std::cout << test++ << "\t" << i << std::endl;
-			new TestPosition(Data::get<int>(i), name, imgCount);
+			//std::cout << test++ << "\t" << i << std::endl;
+			new TestPosition(Data::get<int>(i), name, (i - imageOrigin) / 4);//imgCount);
 			i+=8*4;
 			//448.8
 		}
@@ -133,8 +136,11 @@ void		Worker::print()
 	std::cout << "Void1 " << m_header[Header::VOID1] << std::endl;
 	std::cout << "Void2 " << m_header[Header::VOID2] << std::endl << std::endl;;
 
+#if 0 // print sections list
 	for (unsigned int i = 0; i < m_images.size(); i++)
 		m_images[i]->print();
+#endif
+
 	//Data::print(*m_images[0]->m_deepPtr, 40);
 	/*
 	for (int i = 0; i < 3; i++)
@@ -145,7 +151,9 @@ void		Worker::print()
 		*/
 
 	//Data::print(107360, 120);
-	CollData::print();
+	MapHead::print();
+
+	//CollData::print();
 }
 
 void		Worker::display()

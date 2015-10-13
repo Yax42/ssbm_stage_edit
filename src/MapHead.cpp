@@ -14,7 +14,9 @@ void		MapHead::print()
 	assert(m_ptr != NULL); 
 	std::cout << "MapHead\t\tptr" << *m_ptr << std::endl;
 	for (unsigned int i = 0; i < m_groups.size(); i++)
+	{
 		m_groups[i]->print();
+	}
 }
 
 void		MapHead::display()

@@ -18,7 +18,7 @@ protected:
 	void	printTab()
 	{
 		for (int i = 0; i < m_deep; i++)
-			std::cout << "\t";
+			std::cout << "  ";
 	}
 
 	int			m_deep;

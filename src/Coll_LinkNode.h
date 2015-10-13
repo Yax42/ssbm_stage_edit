@@ -61,7 +61,7 @@ namespace Coll
 		int			*m_ptr;
 		short		*m_shortPtr;
 		int			m_id;
-		sf::Vertex	line[2];
+		sf::Vertex	m_line[2];
 		bool		m_correct;
 		Byte		*m_flag[4];
 	};

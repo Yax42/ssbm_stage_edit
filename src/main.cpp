@@ -7,7 +7,7 @@
 int		main(int ac, char *av)
 {
 
-	Data::read("../test.dat");
+	Data::read("../data/test.dat");
 	Worker::loadData();
 	Worker::print();
 	Window::init();
