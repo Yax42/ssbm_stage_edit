@@ -16,12 +16,15 @@ private:
 public:
 	static bool				read(const std::string &name);
 	static bool				write(const std::string &name);
+	static bool				isInside(int idx) { return (idx >= 0 && idx < m_fileSize); }
 	template <class T>
 	static T				*get(int idx, int offset = 0)
 	{
 		int actualOffset = offset * sizeof(T);
-		assert(idx + actualOffset >= 0 && idx + actualOffset < m_fileSize);
-		return (T *)(&m_data[idx + actualOffset]);
+		//assert(idx + actualOffset >= 0 && idx + actualOffset < m_fileSize);
+		if (idx + actualOffset >= 0 && idx + actualOffset < m_fileSize)
+			return (T *)(&m_data[idx + actualOffset]);
+		return NULL;
 	}
 	static Byte				*getHeader() { return m_buffer; }
 	static void				solveEndianTo(int to);

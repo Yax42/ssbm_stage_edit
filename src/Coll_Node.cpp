@@ -4,10 +4,16 @@
 
 namespace Coll
 {
-	Node::Node(int *ptr, int id, int deep) : ANode(deep, &m_rect)
+	const std::vector<std::string> Node::m_labels =
+	{
+		"Link1",
+		"Link2",
+		"NegOne",
+		"Flag",
+	};
+	Node::Node(int *ptr, int id, int deep) : ANode(ptr, m_labels, "CollNode", id, deep, &m_rect, true)
 	{
 		m_type = NodeType::COLL;
-		m_id = id;
 		m_position = (float *)ptr;
 //		m_flags = Data::get<int>(m_ptr[2]) + m_id * 4;
 

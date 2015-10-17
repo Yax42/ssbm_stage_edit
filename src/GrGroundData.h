@@ -1,6 +1,7 @@
 #pragma once
+#include "Ptr.h"
 
-class GrGroundData
+class GrGroundData : public Ptr
 {
 public:
 /*

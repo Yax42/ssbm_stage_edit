@@ -2,16 +2,22 @@
 
 namespace Map
 {
+
+	const std::vector<std::string> ObjectGroup::m_labels =
+	{
+		"Ptr to head node",
+		"Unk1",
+		"Unk2",
+	};
 	bool	ObjectGroup::Dummy;
 
-	ObjectGroup::ObjectGroup(int *ptr, int *id, int deep) : Object(deep)
+	ObjectGroup::ObjectGroup(int *ptr, int *id, int deep)
+		: Object(ptr, m_labels , "ObjectGroup", *id, deep, false)
 	{
 		static int		prev = 0;
-		m_ptr = ptr;
-		m_id = *id;
-		m_ptrToHeadNode = Data::get<int>(*m_ptr);
-		m_unknown1 = Data::get<int>(*m_ptr, 1);
-		m_unknown2 = Data::get<int>(*m_ptr, 2);
+		m_ptrToHeadNode = &m_ptr[0];
+		m_unknown1 = &m_ptr[1];
+		m_unknown2 = &m_ptr[2];
 		Dummy = false;
 		if (*m_ptrToHeadNode == prev)
 			m_node = NULL;

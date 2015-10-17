@@ -40,8 +40,10 @@ namespace Coll
 			F2_TOP_HARD = 2,
 			F2_RIGHT_HARD = 4,
 			F2_LEFT_HARD = 8,
-			F2_SLIDING = 17,
+			F2_SLIDING = 16,
 		};
+	private:
+		static const std::vector<std::string> m_labels;
 	public:
 		LinkNode(int *ptr, int id);
 		~LinkNode();
@@ -60,7 +62,6 @@ namespace Coll
 	public:
 		int			*m_ptr;
 		short		*m_shortPtr;
-		int			m_id;
 		sf::Vertex	m_line[2];
 		bool		m_correct;
 		Byte		*m_flag[4];

@@ -22,6 +22,8 @@ namespace Coll
 			Y2,
 			FLAG5,
 		};
+	private:
+		static const std::vector<std::string> m_labels;
 	public:
 		ElemNode(int *ptr, int id);
 		~ElemNode();
@@ -38,10 +40,8 @@ namespace Coll
 
 	public:
 
-		int					*m_ptr;
 		short				*m_shortPtr;
 		float				*m_floatPtr;
-		int					m_id;
 		sf::Vertex			line[2];
 		sf::RectangleShape	m_centerShape;
 		sf::RectangleShape	m_shape;

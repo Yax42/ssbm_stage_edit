@@ -2,15 +2,27 @@
 #include "Window.h"
 #include "CollData.h"
 
+
 namespace Coll
 {
-	ElemNode::ElemNode(int *ptr, int id) : ANode(0, &m_centerShape)
+	const std::vector<std::string> ElemNode::m_labels =
+	{
+		"Flag Top",
+		"Flag Bot",
+		"Flag Right",
+		"Flag Left",
+		"EMPTY",
+		"X1",
+		"Y1",
+		"X2",
+		"Y2",
+		"Flags",
+	};
+	ElemNode::ElemNode(int *ptr, int id) : ANode(ptr, m_labels, "ElemNode", id, 0, &m_centerShape, true)
 	{
 		m_type = NodeType::ELEM;
-		m_ptr = ptr;
 		m_shortPtr = (short *) m_ptr;
 		m_floatPtr = (float *) &m_ptr[X1];
-		m_id = id;
 		m_sizeFactor = 3;
 
 		m_shape.setFillColor(sf::Color::Green);

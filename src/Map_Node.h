@@ -28,6 +28,8 @@ namespace Map
 			EMPTY2,
 			COUNT
 		};
+	private:
+		static const std::vector<std::string> m_labels;
 	public:
 		Node(int *ptr, int deep, Node *mother, ObjectGroup &father, int idx);
 		~Node();
@@ -44,7 +46,6 @@ namespace Map
 		virtual void	setThickness(int v);
 
 	public:
-		int					*m_ptr;
 		int					*m_intData;
 		float				*m_floatData;
 		Node				*m_child;

@@ -18,10 +18,23 @@ public:
 		LOCATIONZ,
 		COUNT
 	};
-public:
-	TestPosition(int *ptr, const std::string &name, int id) : ANode(0, &m_rect)
+	const std::vector<std::string>		TestPosition::m_labels =
 	{
-		m_id = id;
+		"rX",
+		"rY",
+		"rZ",
+		"sX",
+		"sY",
+		"sZ",
+		"X",
+		"Y",
+		"Z",
+	};
+
+public:
+	TestPosition(int *ptr, const std::string &name, int id)
+		: ANode(ptr, m_labels, "Transformation", id, 0, &m_rect, true)
+	{
 		m_name = name;
 		m_type = NodeType::TEST_POS;
 		m_position = (float *)ptr;
@@ -70,6 +83,5 @@ public:
 	sf::CircleShape		m_rect;
 	float				*m_position;
 	std::string			m_name;
-	int					m_id;
 	//int					*m_flags;
 };

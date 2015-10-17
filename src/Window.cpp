@@ -6,14 +6,15 @@
 #include "Worker.h"
 #include "Coll_Node.h"
 #include "GrGroundData.h"
+#include "BytesMatrix.h"
 
 bool			DynamicVar::m_dummy = false;
 bool			*DynamicVar::m_shift = &DynamicVar::m_dummy;
 bool			*DynamicVar::m_ctrl = &DynamicVar::m_dummy;
 bool			*DynamicVar::m_alt = &DynamicVar::m_dummy;
 Window	*Window::Instance = NULL;
-const int		Window::height = 600;
-const int		Window::width = 800;
+const int		Window::height = 768;
+const int		Window::width = 1024;
 
 void		Window::init()
 {
@@ -23,6 +24,7 @@ void		Window::init()
 
 Window::Window() : m_window(sf::VideoMode(width, height), "Melee mapping"), m_view()
 {
+	m_editing = false;
 	m_zoomTotal = 1;
 	m_focus = true;
 	m_isSelecting = false;
@@ -68,105 +70,164 @@ sf::Vector2f			Window::mousePos()
 
 void					Window::act()
 {
-	if (m_mouseJustPressed[sf::Mouse::Left])
+	if (m_editing)
 	{
-		m_fromx = mousePos().x;
-		m_fromy = mousePos().y;
-		m_isSelecting = true;
-	}
-	if (m_mouse[sf::Mouse::Left])
-	{
-		m_sizex = mousePos().x - m_fromx;
-		if (m_sizex < 0)
-			m_sizex = 0;
-		m_sizey = mousePos().y - m_fromy;
-		if (m_sizey < 0)
-			m_sizey = 0;
-		m_selectShape.setSize(sf::Vector2f(m_sizex, m_sizey));
-		m_selectShape.setPosition(m_fromx, m_fromy);
-	}
-	else if (m_isSelecting)
-	{
-		m_isSelecting = false;
-		if (!m_keyPressed[sf::Keyboard::LControl] && !m_keyPressed[sf::Keyboard::RControl])
-			ANode::clearSelections();
-		ANode::selectArea(sf::Vector2f(m_fromx, m_fromy), sf::Vector2f(m_fromx + m_sizex, m_fromy + m_sizey), true, m_keyPressed[sf::Keyboard::LShift]);
-	}
-
-	if (m_mouse[sf::Mouse::Right])
-	{
-		float factor = (m_keyPressed[sf::Keyboard::Space] ? 0.1 : 1);
-		ANode::moveSelect(sf::Vector2f(	m_deltaMouseFloat.x * !m_keyPressed[sf::Keyboard::LShift] * factor,
-										m_deltaMouseFloat.y * !m_keyPressed[sf::Keyboard::LControl] * factor));
-	}
-
-	//Camera
-	if (m_mouse[sf::Mouse::Middle])
-	{
-		//float			x = m_view.getCenter().x - m_deltaMousePos.x;
-		//float			y = m_view.getCenter().y - m_deltaMousePos.y;
-		float			x = m_view.getCenter().x - m_deltaMouseFloat.x;
-		float			y = m_view.getCenter().y - m_deltaMouseFloat.y;
-		m_view.setCenter(sf::Vector2f(x, y));
-		m_window.setView(m_view);
-	}
-
-	//--------------------------
-	//---User Actions-----------
-	//--------------------------
-	for (int i = 0; i < 10; i++)
-	{
-		m_vars[i].proc();
-		if (m_justPressed[sf::Keyboard::V])
-			m_vars[i].print();
-	}
-	if (m_justPressed[sf::Keyboard::X])
-	{
-		if (m_tmp[Var::TYPE] == -1)
+		if (m_mouseJustPressed[sf::Mouse::Left])
 		{
-			if (m_tmp[Var::ID] == 0)
+			m_fromx = mousePos().x;
+			m_fromy = mousePos().y;
+			m_isSelecting = true;
+		}
+		if (m_mouse[sf::Mouse::Left])
+		{
+			m_sizex = mousePos().x - m_fromx;
+			m_sizey = mousePos().y - m_fromy;
+			m_selectShape.setSize(sf::Vector2f(m_sizex, m_sizey));
+			m_selectShape.setPosition(m_fromx, m_fromy);
+		}
+		else if (m_isSelecting)
+		{
+			m_isSelecting = false;
+			if (!m_keyPressed[sf::Keyboard::LControl] && !m_keyPressed[sf::Keyboard::RControl])
+				ANode::clearSelections();
+			float x0 = m_fromx;
+			float x1 = m_fromx + m_sizex;
+			float y0 = m_fromy;
+			float y1 = m_fromy + m_sizey;
+			ANode::selectArea(
+				sf::Vector2f(x0 > x1 ? x1 : x0, y0 > y1 ? y1 : y0),
+				sf::Vector2f(x0 < x1 ? x1 : x0, y0 < y1 ? y1 : y0),
+				true, m_keyPressed[sf::Keyboard::LShift]);
+		}
+
+		if (m_mouse[sf::Mouse::Right])
+		{
+			float factor = (m_keyPressed[sf::Keyboard::Space] ? 0.1 : 1);
+			ANode::moveSelect(sf::Vector2f(m_deltaMouseFloat.x * !m_keyPressed[sf::Keyboard::LShift] * factor,
+				m_deltaMouseFloat.y * !m_keyPressed[sf::Keyboard::LControl] * factor));
+		}
+
+		//Camera
+		if (m_mouse[sf::Mouse::Middle])
+		{
+			//float			x = m_view.getCenter().x - m_deltaMousePos.x;
+			//float			y = m_view.getCenter().y - m_deltaMousePos.y;
+			float			x = m_view.getCenter().x - m_deltaMouseFloat.x;
+			float			y = m_view.getCenter().y - m_deltaMouseFloat.y;
+			m_view.setCenter(sf::Vector2f(x, y));
+			m_window.setView(m_view);
+		}
+
+		//--------------------------
+		//---User Actions-----------
+		//--------------------------
+		for (int i = 0; i < 10; i++)
+		{
+			m_vars[i].proc();
+			if (m_justPressed[sf::Keyboard::V])
+				m_vars[i].print();
+		}
+		if (m_justPressed[sf::Keyboard::X])
+		{
+			if (m_tmp[Var::TYPE] == -1)
 			{
-				if (m_tmp[Var::VAL] < CollData::m_nodes.size())
-					CollData::m_nodes[m_tmp[Var::VAL]]->select();
+				if (m_tmp[Var::ID] == 0)
+				{
+					if (m_tmp[Var::VAL] < CollData::m_nodes.size())
+						CollData::m_nodes[m_tmp[Var::VAL]]->select();
+				}
+				else if (m_tmp[Var::ID] == 1)
+				{
+					if (m_tmp[Var::VAL] < CollData::m_links.size())
+						CollData::m_links[m_tmp[Var::VAL]]->select();
+				}
+				else if (m_tmp[Var::ID] == 2)
+				{
+					if (m_tmp[Var::VAL] < CollData::m_elems.size())
+						CollData::m_elems[m_tmp[Var::VAL]]->select();
+				}
 			}
-			else if (m_tmp[Var::ID] == 1)
+			else if (m_tmp[Var::TYPE] == -2)
+				GrGroundData::act();
+			else if (m_tmp[Var::TYPE] == -3)
+				Data::m_globalFileSize = m_tmp[Var::VAL];
+			else
+				ANode::globalAct(m_tmp);
+		}
+		if (m_justPressed[sf::Keyboard::C])
+		{
+			CollData::autoResolve();
+		}
+		//--------------------------
+		//--------------------------
+		//--------------------------
+
+		if (m_wheelDelta != 0 && m_keyPressed[sf::Keyboard::LControl])
+		{
+			float	deltaZoom = 1 - Math::sgn(m_wheelDelta) * 0.2;
+			int		time = Math::abs(m_wheelDelta);
+			m_zoom = Math::pow(deltaZoom, time);
+			m_view.zoom(m_zoom);
+			m_zoomTotal *= m_zoom;
+			m_window.setView(m_view);
+			ANode::globalSetScale(m_zoomTotal);
+			m_selectShape.setOutlineThickness(m_zoomTotal * 2);
+		}
+
+		if (m_justPressed[sf::Keyboard::N])
+		{
+			auto node = ANode::getOneSelected();
+			if (node != NULL)
 			{
-				if (m_tmp[Var::VAL] < CollData::m_links.size())
-					CollData::m_links[m_tmp[Var::VAL]]->select();
-			}
-			else if (m_tmp[Var::ID] == 2)
-			{
-				if (m_tmp[Var::VAL] < CollData::m_elems.size())
-					CollData::m_elems[m_tmp[Var::VAL]]->select();
+				int btSize = BytesMatrix::Instance->m_buttonSize;
+				delete BytesMatrix::Instance;
+				BytesMatrix::Instance = new BytesMatrix(node->m_ptr, btSize);
+				m_editing = false;
+				m_window.setView(m_neutralView);
 			}
 		}
-		else if (m_tmp[Var::TYPE] == -2)
-			GrGroundData::act();
-		else if (m_tmp[Var::TYPE] == -3)
-			Data::m_globalFileSize = m_tmp[Var::VAL];
-		else
-			ANode::globalAct(m_tmp);
 	}
-	if (m_justPressed[sf::Keyboard::C])
+	else // BytesMatrix
 	{
-		CollData::autoResolve();
-	}
-	//--------------------------
-	//--------------------------
-	//--------------------------
+		if (BytesMatrix::Instance->Next != NULL)
+		{
+			int btSize = BytesMatrix::Instance->m_buttonSize;
+			auto next = BytesMatrix::Instance->Next;
+			delete BytesMatrix::Instance;
+			BytesMatrix::Instance = new BytesMatrix(next, btSize);
+		}
+		else if (m_wheelDelta != 0)
+		{
+			int pos = BytesMatrix::Instance->m_position;
+			int btSize = BytesMatrix::Instance->m_buttonSize;
+			delete BytesMatrix::Instance;
+			if (m_keyPressed[sf::Keyboard::LControl])
+			{
+				float	deltaZoom = 1 + Math::sgn(m_wheelDelta) * 0.2;
+				int		time = Math::abs(m_wheelDelta);
+				float zoom = Math::pow(deltaZoom, time);
+				btSize *= zoom;
+			}
+			else
+			{
+				int factor = 200 / btSize;
+				factor = (factor < 1 ? 1 : factor);
+				//pos -= m_wheelDelta * factor;
+				int lineSize = (Window::width / (btSize + 1));
+				pos -= m_wheelDelta * factor * lineSize * 4;
+			}
+			BytesMatrix::Instance = new BytesMatrix(pos, btSize);
+		}
 
-	if (m_wheelDelta != 0 && m_keyPressed[sf::Keyboard::LControl])
-	{
-		float	deltaZoom = 1 - Math::sgn(m_wheelDelta) * 0.2;
-		int		time = Math::abs(m_wheelDelta);
-		m_zoom = Math::pow(deltaZoom, time);
-		m_view.zoom(m_zoom);
-		m_zoomTotal *= m_zoom;
-		m_window.setView(m_view);
-		ANode::globalSetScale(m_zoomTotal);
-		m_selectShape.setOutlineThickness(m_zoomTotal * 2);
-	}
+		if (m_justPressed[sf::Keyboard::N])
+		{
+			m_window.setView(m_view);
+			ANode::globalUpdatePos();
+			m_editing = true;
+		}
 
+		BytesMatrix::Instance->process(m_mousePosFloat, m_mouse[sf::Mouse::Left], m_mouse[sf::Mouse::Right], m_keyPressed[sf::Keyboard::LControl]);
+	}
 	//Save
 	if (m_justPressed[sf::Keyboard::Delete])
 	{
@@ -262,9 +323,17 @@ void					Window::procEvent()
 
 void					Window::display()
 {
-	Worker::display();
-	if (m_isSelecting)
-		draw(m_selectShape);
+	if (m_editing)
+	{
+		Worker::display();
+		if (m_isSelecting)
+			draw(m_selectShape);
+	}
+	else
+	{
+
+		BytesMatrix::Instance->display();
+	}
 }
 
 void					Window::loop()

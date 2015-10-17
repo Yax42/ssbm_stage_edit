@@ -25,18 +25,39 @@ namespace Map
 		"Spawn player 4"
 	};
 
-	Node::Node(int *ptr, int deep, Node *mother, ObjectGroup &father, int idx) : ANode(deep, &m_rect)
+	
+	const std::vector<std::string> Node::m_labels =
+	{
+		"Empty1",
+		"Flags",
+		"Child_ptr",
+		"Next_ptr",
+		"Data_ptr",
+		"Rotatex",
+		"Rotatey",
+		"Rotatez",
+		"Sizex",
+		"Sizey",
+		"Sizez",
+		"Locationx",
+		"Locationy",
+		"Locationz",
+		"Inverse",
+		"Empty2",
+	};
+
+	Node::Node(int *ptr, int deep, Node *mother, ObjectGroup &father, int idx)
+		: ANode(ptr, m_labels, "MapNode", deep * 1000 + idx, deep, &m_rect, false)
 	{
 		m_type = NodeType::MAP;
 		if (idx < 17 && father.m_id == 3 && deep == 2)
 			//m_name = Names[idx];
 		;//else
 			m_name = std::to_string(idx);
-		m_ptr = ptr;
 
-		if (*ptr >= Data::m_fileSize || *ptr < 0)
+		if (m_ptr == NULL)
 		{	
-			ptr = Data::Dummy;
+			m_ptr = Data::Dummy;
 			m_intData = Data::Dummy;
 			m_floatData = (float *)Data::Dummy;
 			m_mother = mother;
@@ -49,8 +70,8 @@ namespace Map
 		}
 		else
 		{
-			m_intData = Data::get<int>(*ptr);
-			m_floatData = Data::get<float>(*ptr);
+			m_intData = m_ptr;
+			m_floatData = (float *) m_ptr;
 			m_mother = mother;
 
 			m_rect.setPosition(pos());
@@ -109,7 +130,7 @@ namespace Map
 		//		<< " Z" << m_intData[EMPTY2]
 		//		<< " Depth " << m_deep
 				<< std::endl;
-#if 0 // print transformation
+#if 1 // print transformation
 		printTab();
 		std::cout << "\tRotate:\t\tX" << m_floatData[ROTATEX] << "\tY" << m_floatData[ROTATEY] << "\tZ" << m_floatData[ROTATEZ] << std::endl;
 		printTab();

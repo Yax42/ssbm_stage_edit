@@ -8,26 +8,26 @@
 
 class Image: public Object
 {
+private:
+	std::vector<std::string> m_labels = { "Image" };
 public:
-	Image(int pos, int strPos, int deep = 0) : Object(deep)
+	Image(int pos, int strPos, int deep = 0) : Object(&pos, m_labels, "Image", 0, deep, false)
 	{
-		m_deepPtr = Data::get<int>(pos);
-		m_ptr = Data::get<int>(*m_deepPtr);
 		m_strOffset = Data::get<int>(pos, 1);
 		m_str = Data::get<char>(strPos, *m_strOffset);
 
 		if (isEqual("map_head"))
-			MapHead::load(m_deepPtr);
+			MapHead::load(m_ptr);
 		if (isEqual("coll_data"))
-			CollData::load(m_deepPtr);
+			CollData::load(m_ptr);
 		if (isEqual("grGroundParam"))
-			GrGroundData::load(m_deepPtr);
+			GrGroundData::load(m_ptr);
 	}
 	~Image(){}
 	virtual void	print()
 	{
 		printTab();
-		std::cout << *m_deepPtr << "\t " << std::string(m_str) << std::endl;
+		std::cout << *m_ptr << "\t " << std::string(m_str) << std::endl;
 	}
 
 	virtual void	deepPrint()
@@ -69,8 +69,6 @@ public:
 public:
 	int		*m_strOffset;
 	char	*m_str;
-	int		*m_ptr;
-	int		*m_deepPtr;
 
 	bool	isEqual(char *str)
 	{

@@ -4,12 +4,17 @@
 
 namespace Coll
 {
-	LinkNode::LinkNode(int *ptr, int id) : ANode(0, NULL)
+	const std::vector<std::string> LinkNode::m_labels =
+	{
+		"Link1",
+		"Link2",
+		"NegOne",
+		"Flag",
+	};
+	LinkNode::LinkNode(int *ptr, int id) : ANode(ptr, m_labels, "CollisionLinkNode", id, 0, NULL, true)
 	{
 		m_type = NodeType::LINK;
-		m_ptr = ptr;
 		m_shortPtr = (short *) ptr;
-		m_id = id;
 		m_sizeFactor = 4;
 		m_flag[0] = &((Byte*) &m_ptr[I_FLAG])[1];
 		m_flag[1] = &((Byte*) &m_ptr[I_FLAG])[2];
@@ -59,26 +64,28 @@ namespace Coll
 		if (!m_correct)
 			return;
 
+		sf::Color color;
 		m_line[0] = sf::Vertex(getNodePos(LINK1_F)),
 		m_line[1] = sf::Vertex(getNodePos(LINK1_T));
 		if (m_selected)
 		{
-			m_line[0].color = sf::Color::Green;
-			m_line[1].color = sf::Color::Green;
+			color = sf::Color::White;
 		}
 		else
 		{
-			m_line[1].color = sf::Color::Cyan;
-			m_line[0].color = sf::Color::Cyan;
+			color = sf::Color(128, 0, 0, 255);
 		}
+		m_line[1].color = color;
+		m_line[0].color = color;
 		g_window.m_window.draw(m_line, 2, sf::Lines);
 
+		color = sf::Color(64, 0, 0, 255);
 		if (m_shortPtr[LINK2_F] != -1)
 		{
 			m_line[0] = sf::Vertex(pos());
 			m_line[1] = sf::Vertex(getLinkPos(LINK2_F));
-			m_line[0].color = sf::Color(0,128,0, 255);
-			m_line[1].color = sf::Color(0,128,0, 255);
+			m_line[0].color = color;
+			m_line[1].color = color;
 			g_window.m_window.draw(m_line, 2, sf::Lines);
 		}
 
@@ -86,8 +93,8 @@ namespace Coll
 		{
 			m_line[0] = sf::Vertex(pos());
 			m_line[1] = sf::Vertex(getLinkPos(LINK2_T));
-			m_line[0].color = sf::Color(0,128,0, 255);
-			m_line[1].color = sf::Color(0,128,0, 255);
+			m_line[0].color = color;
+			m_line[1].color = color;
 			g_window.m_window.draw(m_line, 2, sf::Lines);
 		}
 	}

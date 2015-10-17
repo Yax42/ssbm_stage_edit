@@ -71,6 +71,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\Button.h" />
+    <ClInclude Include="..\src\ByteButton.h" />
+    <ClInclude Include="..\src\BytesMatrix.h" />
     <ClInclude Include="..\src\CollData.h" />
     <ClInclude Include="..\src\Coll_ElemNode.h" />
     <ClInclude Include="..\src\Coll_LinkNode.h" />
@@ -85,12 +88,17 @@
     <ClInclude Include="..\src\MyMath.h" />
     <ClInclude Include="..\src\Node.h" />
     <ClInclude Include="..\src\Object.h" />
+    <ClInclude Include="..\src\Ptr.h" />
+    <ClInclude Include="..\src\Resources.h" />
     <ClInclude Include="..\src\TestPosition.h" />
     <ClInclude Include="..\src\Window.h" />
     <ClInclude Include="..\src\Worker.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Button.cpp" />
+    <ClCompile Include="..\src\ByteButton.cpp" />
+    <ClCompile Include="..\src\BytesMatrix.cpp" />
     <ClCompile Include="..\src\CollData.cpp" />
     <ClCompile Include="..\src\Coll_ElemNode.cpp" />
     <ClCompile Include="..\src\Coll_LinkNode.cpp" />
@@ -102,6 +110,8 @@
     <ClCompile Include="..\src\Map_Group.cpp" />
     <ClCompile Include="..\src\Map_Node.cpp" />
     <ClCompile Include="..\src\Node.cpp" />
+    <ClCompile Include="..\src\Ptr.cpp" />
+    <ClCompile Include="..\src\Resources.cpp" />
     <ClCompile Include="..\src\Window.cpp" />
     <ClCompile Include="..\src\Worker.cpp" />
   </ItemGroup>

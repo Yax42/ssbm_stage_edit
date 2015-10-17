@@ -9,6 +9,8 @@ namespace Map
 {
 	class ObjectGroup : public Object
 	{
+	private:
+		static const std::vector<std::string> m_labels;
 	public:
 		static bool		Dummy;
 	public:
@@ -18,8 +20,6 @@ namespace Map
 		virtual void	display();
 		
 	public:
-		int		*m_ptr;
-		int		m_id;
 		int		*m_ptrToHeadNode;
 		int		*m_unknown1;
 		int		*m_unknown2;

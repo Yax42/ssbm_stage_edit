@@ -5,7 +5,7 @@
 #include "Window.h"
 #include "Map_Group.h"
 
-class MapHead
+class MapHead : public Ptr
 {
 private:
 	MapHead();

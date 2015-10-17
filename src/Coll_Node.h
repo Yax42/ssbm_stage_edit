@@ -13,6 +13,8 @@ namespace Coll
 			LOCATIONY,
 			COUNT
 		};
+	private:
+		static const std::vector<std::string> m_labels;
 	public:
 		Node(int *ptr, int id, int deep = 0);
 		~Node();
@@ -28,7 +30,6 @@ namespace Coll
 
 	public:
 		int					*m_ptr;
-		int					m_id;
 		sf::CircleShape		m_rect;
 		float				*m_position;
 		//int					*m_flags;

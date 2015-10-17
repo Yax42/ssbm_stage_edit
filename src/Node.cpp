@@ -6,7 +6,8 @@ std::vector<ANode *>		ANode::NodesList;
 int							ANode::SelectCount = 0;
 float						ANode::Scale = 1;
 		
-ANode::ANode(int deep, sf::Shape *shape) : Object(deep), m_shape(shape)
+ANode::ANode(int *ptr, const std::vector<std::string> &labels, const std::string &name, int id, int deep, sf::Shape *shape, bool ptrIsOk)
+	: Object(ptr, labels, name, id, deep, ptrIsOk), m_shape(shape)
 {
 	NodesList.push_back(this);
 	m_selected = false;
@@ -15,7 +16,7 @@ ANode::ANode(int deep, sf::Shape *shape) : Object(deep), m_shape(shape)
 ANode::~ANode()
 {
 	unselect();
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end() ;++i)
+	for (auto i = NodesList.begin(); i != NodesList.end() ;++i)
 		if (*i == this)
 		{
 			NodesList.erase(i);
@@ -25,7 +26,7 @@ ANode::~ANode()
 
 void		ANode::globalDisplay()
 {
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end() ;++i)
+	for (auto i = NodesList.begin(); i != NodesList.end() ;++i)
 		if (!(*i)->hide())
 			(*i)->display();
 }
@@ -42,7 +43,7 @@ void			ANode::getMouseTarget(bool isSwitch)
 {
 	sf::Vector2f	mouse = g_window.mousePos();
 
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end();++i)
+	for (auto i = NodesList.begin(); i != NodesList.end();++i)
 	{
 		sf::Vector2f	ss = (*i)->scaledSize();
 		if (mouse.x > (*i)->x() && mouse.x < (*i)->x() + ss.x
@@ -61,7 +62,7 @@ void			ANode::getMouseTarget(bool isSwitch)
 
 void			ANode::selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool isSwitch, bool onlyOne)
 {
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
 		if (!(*i)->hide())
 		{
 			sf::Vector2f p = (*i)->center();
@@ -77,7 +78,7 @@ void			ANode::selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool 
 			}
 		}
 	if (SelectCount == 1)
-		for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
+		for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
 			if ((*i)->m_selected)
 				(*i)->printOnly();
 
@@ -85,13 +86,13 @@ void			ANode::selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool 
 
 void			ANode::clearSelections()
 {
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
 		(*i)->unselect();
 }
 
 void			ANode::moveSelect(const sf::Vector2f &delta)
 {
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
 		if (!(*i)->hide())
 		if ((*i)->m_selected)
 		{
@@ -116,7 +117,7 @@ void			ANode::globalAct(int *data)
 		std::cout << "More than one selection, that could be dangerous to modifie, LAlt to force" << std::endl;
 		return ;
 	}
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
 		if (!(*i)->hide())
 			if ((*i)->m_selected)
 				(*i)->act(data);
@@ -157,7 +158,7 @@ void		ANode::setScale(float s)
 void		ANode::globalSetScale(float s)
 {
 	Scale = s;
-	for (std::vector<ANode *>::iterator i = NodesList.begin(); i != NodesList.end(); ++i)
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
 		(*i)->setScale(s);
 }
 
@@ -170,6 +171,19 @@ void	ANode::updatePos()
 	}
 }
 
+void	ANode::globalUpdatePos()
+{
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
+		(*i)->updatePos();
+}
+
+ANode			*ANode::getOneSelected()
+{
+	for (auto i = NodesList.begin(); i != NodesList.end(); ++i)
+		if ((*i)->m_selected)
+			return (*i);
+	return NULL;
+}
 
 sf::Vector2f			ANode::center()
  {

@@ -4,7 +4,6 @@
 
 #define g_window (*Window::Instance)
 
-
 namespace Map
 {
 	class Node;
@@ -53,6 +52,7 @@ public:
 public:
 	sf::RenderWindow		m_window;
 	sf::View				m_view;
+	sf::View				m_neutralView;
 	bool					m_mouse[sf::Mouse::ButtonCount];
 	bool					m_mouseJustPressed[sf::Mouse::ButtonCount];
 	sf::Vector2i			m_mousePos;
@@ -75,4 +75,5 @@ public:
 	DynamicVar				m_vars[10];
 
 	bool					m_focus;
+	bool					m_editing;
 };

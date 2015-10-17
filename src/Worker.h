@@ -23,7 +23,7 @@ class Worker
 {
 private:
 	Worker(int deep);
-	~Worker();
+	~Worker() {}
 public:
 	static void		print();
 	static void		display();

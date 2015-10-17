@@ -34,11 +34,11 @@ bool	isTriositionOk(int id)
 	for (int j = 0; j < 3; j++)
 		if (*Data::get<float>(id, j) != 0)
 			//if (!isOk(*Data::get<float>(id, j)))
-			;//return false;
+			return false;
 
 	for (int j = 3; j < 6; j++)
 		if (*Data::get<float>(id, j) <= 0 || *Data::get<float>(id, j) > 50 || !isOk(*Data::get<float>(id, j)))
-			;//return false;
+			return false;
 
 		return (isOk(*Data::get<float>(id, 6)) &&
 			isOk(*Data::get<float>(id, 7)) && 
@@ -74,7 +74,7 @@ bool		Worker::loadData()
 
 	for (int j = 0; j < m_header[NB_BASE]; j++)
 		for (int i = j + 1; i < m_header[NB_BASE]; i++)
-			if (i != j && *m_images[i]->m_deepPtr < *m_images[j]->m_deepPtr)
+			if (i != j && *m_images[i]->m_ptr < *m_images[j]->m_ptr)
 			{
 				Image *tmp = m_images[i];
 				m_images[i] = m_images[j];
@@ -89,7 +89,7 @@ bool		Worker::loadData()
 	for (int i = 0; i < m_origin; i += 4)
 	{
 
-		if (m_images.size() > imgCount && *m_images[imgCount]->m_deepPtr < i)
+		if (m_images.size() > imgCount && *m_images[imgCount]->m_ptr < i)
 		{
 			name = m_images[imgCount]->m_str;
 			imgCount++;

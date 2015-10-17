@@ -19,7 +19,7 @@ namespace NodeType
 class ANode : public Object
 {
 	public:
-		ANode(int deep, sf::Shape *shape);
+		ANode(int *ptr, const std::vector<std::string> &labels, const std::string &name, int id, int deep, sf::Shape *shape, bool ptrIsOk);
 		virtual ~ANode();
 		virtual void			printOnly() { print(); };
 		virtual void			print() = 0;
@@ -46,9 +46,11 @@ class ANode : public Object
 		static void				getMouseTarget(bool isSwitch);
 		static void				selectArea(const sf::Vector2f &from, const sf::Vector2f &to, bool isSwitch, bool onlyOne);
 		static void				globalDisplay();
+		static void				globalUpdatePos();
 		static void				clearSelections();
 		static void				globalAct(int *data);
 		static void				globalSetScale(float s);
+		static ANode			*getOneSelected();
 
 	public:
 		float							m_sizeFactor;
