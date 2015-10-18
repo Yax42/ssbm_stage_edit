@@ -86,7 +86,7 @@ bool		Worker::loadData()
 	int test = 0;
 	bool isFirst = true;
 	int imageOrigin = 0;
-	if(0)
+	if (0)
 	for (int i = 0; i < m_origin; i += 4)
 	{
 

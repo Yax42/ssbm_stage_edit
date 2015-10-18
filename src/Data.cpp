@@ -52,7 +52,7 @@ bool		Data::read(const std::string &name)
 
 	if (hFile == INVALID_HANDLE_VALUE) 
 	{ 
-		std::cout << "Error: unable to open " << name << std::endl;
+		std::cout << "error: unable to open " << name << std::endl;
 		assert(hFile != INVALID_HANDLE_VALUE);
 		return false;
 	}
@@ -64,7 +64,7 @@ bool		Data::read(const std::string &name)
 	if (m_fileSize > 10000000) // limit the size to 10Mo
 	{
 		CloseHandle(hFile);
-		std::cout << "Error: file" << name << " bigger than 10Mo, can't handle it." << std::endl;
+		std::cout << "error: file" << name << " bigger than 10Mo, can't handle it." << std::endl;
 		return false;
 	}
 	if (m_buffer != NULL)
@@ -84,7 +84,7 @@ bool		Data::read(const std::string &name)
 
 		if (FALSE == bErrorFlag)
 		{
-			std::cout << "Error: unable to read " << name << std::endl;
+			std::cout << "error: unable to read " << name << std::endl;
 			CloseHandle(hFile);
 			return false;
 		}
@@ -100,7 +100,7 @@ bool		Data::write(const std::string &name)
 {
 	if (m_buffer == NULL)
 	{
-		std::cout << "Error: no file loaded at the first place." << std::endl;
+		std::cout << "error: no file loaded at the first place." << std::endl;
 		return (false);
 	}
 	HANDLE hFile; 
@@ -119,7 +119,7 @@ bool		Data::write(const std::string &name)
 
 	if (hFile == INVALID_HANDLE_VALUE) 
 	{ 
-		std::cout << "Error: unable to open " << name << std::endl;
+		std::cout << "error: unable to open " << name << std::endl;
 		return false;
 	}
 
@@ -136,7 +136,7 @@ bool		Data::write(const std::string &name)
 
 		if (FALSE == bErrorFlag)
 		{
-			std::cout << "Error: unable to write on " << name << std::endl;
+			std::cout << "error: unable to write on " << name << std::endl;
 			CloseHandle(hFile);
 			solveFileEndian();
 			return false;
@@ -154,7 +154,7 @@ bool		Data::write(const std::string &name)
 
 		if (FALSE == bErrorFlag)
 		{
-			std::cout << "Error: unable to write on " << name << std::endl;
+			std::cout << "error: unable to write on " << name << std::endl;
 			CloseHandle(hFile);
 			solveFileEndian();
 			return false;

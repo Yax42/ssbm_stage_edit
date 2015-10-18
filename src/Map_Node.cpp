@@ -65,7 +65,7 @@ namespace Map
 			m_sizeFactor = 0;
 			m_rect.setSize(size());
 			m_next = NULL;
-			std::cout << "Dummy Map_Node" << std::endl;
+			//std::cout << "Dummy Map_Node" << std::endl;
 			ObjectGroup::Dummy = true;
 		}
 		else

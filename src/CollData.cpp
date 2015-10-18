@@ -49,10 +49,10 @@ void CollData::load()
 		m_links.push_back(new Coll::LinkNode(ptrToLinks + i * 4, i));
 	}
 
-	//ELEM
+	//AREAS
 	m_countArea = m_ptr[ELEM_COUNT];
 	int		*ptrToAreas = Data::get<int>(m_ptr[ELEMS]);
-	std::cout << m_countArea << " " << m_ptr[ELEMS] << std::endl;
+	//std::cout << m_countArea << " " << m_ptr[ELEMS] << std::endl;
 	for (int i = 0; i < m_countArea; i++)
 	{
 		m_areas.push_back(new Coll::AreaNode(ptrToAreas + i * 10, i));
