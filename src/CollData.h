@@ -7,7 +7,7 @@
 #include "Coll_LinkNode.h"
 #include "Coll_ElemNode.h"
 
-class CollData 
+class CollData : Ptr
 {
 public:
 	enum
@@ -27,21 +27,24 @@ public:
 		COUNT = 12
 	};
 private:
-	CollData();
+	static const std::vector<std::string> m_labels;
+private:
+	CollData(int *ptr);
+	void	load();
+public:
 	~CollData();
 public:
-	static void			load(int *ptr);
-	static void			print();
-	static void			display();
-	static void			clean();
-	static void			autoResolve();
+	void			print();
+	virtual void	display();
+	void			autoResolve();
 public:
-	static int									*m_ptr;
-	static int									*m_deepPtr;
-	static int									m_count;
-	static int									m_countLink;
-	static int									m_countElem;
-	static std::vector<Coll::Node *>			m_nodes;
-	static std::vector<Coll::LinkNode *>		m_links;
-	static std::vector<Coll::ElemNode *>		m_elems;
+	int									m_count;
+	int									m_countLink;
+	int									m_countElem;
+	std::vector<Coll::Node *>			m_nodes;
+	std::vector<Coll::LinkNode *>		m_links;
+	std::vector<Coll::ElemNode *>		m_elems;
+public:
+	static CollData					*Instance;
+	static void							init(int *ptr);
 };

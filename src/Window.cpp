@@ -133,22 +133,22 @@ void					Window::act()
 			{
 				if (m_tmp[Var::ID] == 0)
 				{
-					if (m_tmp[Var::VAL] < CollData::m_nodes.size())
-						CollData::m_nodes[m_tmp[Var::VAL]]->select();
+					if (m_tmp[Var::VAL] < CollData::Instance->m_nodes.size())
+						CollData::Instance->m_nodes[m_tmp[Var::VAL]]->select();
 				}
 				else if (m_tmp[Var::ID] == 1)
 				{
-					if (m_tmp[Var::VAL] < CollData::m_links.size())
-						CollData::m_links[m_tmp[Var::VAL]]->select();
+					if (m_tmp[Var::VAL] < CollData::Instance->m_links.size())
+						CollData::Instance->m_links[m_tmp[Var::VAL]]->select();
 				}
 				else if (m_tmp[Var::ID] == 2)
 				{
-					if (m_tmp[Var::VAL] < CollData::m_elems.size())
-						CollData::m_elems[m_tmp[Var::VAL]]->select();
+					if (m_tmp[Var::VAL] < CollData::Instance->m_elems.size())
+						CollData::Instance->m_elems[m_tmp[Var::VAL]]->select();
 				}
 			}
 			else if (m_tmp[Var::TYPE] == -2)
-				GrGroundData::act();
+				GrGroundData::Instance->act();
 			else if (m_tmp[Var::TYPE] == -3)
 				Data::m_globalFileSize = m_tmp[Var::VAL];
 			else
@@ -156,7 +156,7 @@ void					Window::act()
 		}
 		if (m_justPressed[sf::Keyboard::C])
 		{
-			CollData::autoResolve();
+			CollData::Instance->autoResolve();
 		}
 		//--------------------------
 		//--------------------------
@@ -213,7 +213,7 @@ void					Window::act()
 				int factor = 200 / btSize;
 				factor = (factor < 1 ? 1 : factor);
 				//pos -= m_wheelDelta * factor;
-				int lineSize = (Window::width / (btSize + 1));
+				int lineSize = (1000 / (btSize + 1));
 				pos -= m_wheelDelta * factor * lineSize * 4;
 			}
 			BytesMatrix::Instance = new BytesMatrix(pos, btSize);
@@ -226,7 +226,21 @@ void					Window::act()
 			m_editing = true;
 		}
 
-		BytesMatrix::Instance->process(m_mousePosFloat, m_mouse[sf::Mouse::Left], m_mouse[sf::Mouse::Right], m_keyPressed[sf::Keyboard::LControl]);
+		if (m_justPressed[sf::Keyboard::Space])
+			BytesMatrix::Instance->numberPressed(-2);
+		else if (m_justPressed[sf::Keyboard::Period])
+			BytesMatrix::Instance->numberPressed(-1);
+		else
+		{
+			for (int i = 0; i < 10; i++)
+				if (m_justPressed[sf::Keyboard::Num0 + i])
+				{
+					BytesMatrix::Instance->numberPressed(i);
+					break;
+				}
+		}
+
+		BytesMatrix::Instance->process(m_mousePosFloat, m_mouseJustPressed[sf::Mouse::Left], m_mouseJustPressed[sf::Mouse::Right], m_keyPressed[sf::Keyboard::LControl]);
 	}
 	//Save
 	if (m_justPressed[sf::Keyboard::Delete])

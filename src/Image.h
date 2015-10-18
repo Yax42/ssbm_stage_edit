@@ -19,9 +19,9 @@ public:
 		if (isEqual("map_head"))
 			MapHead::load(m_ptr);
 		if (isEqual("coll_data"))
-			CollData::load(m_ptr);
+			CollData::init(m_ptr);
 		if (isEqual("grGroundParam"))
-			GrGroundData::load(m_ptr);
+			GrGroundData::init(m_ptr);
 	}
 	~Image(){}
 	virtual void	print()
@@ -51,7 +51,7 @@ public:
 		if (isEqual("map_head"))
 			MapHead::print();
 		if (isEqual("coll_data"))
-			CollData::print();
+			CollData::Instance->print();
 		//Tested:
 		//			-map_head
 		//			-coll_data

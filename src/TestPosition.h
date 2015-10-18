@@ -79,7 +79,6 @@ public:
 	virtual bool			hide() { return (ANode::hide() || (g_window.m_tmp[4] >= 0 && g_window.m_tmp[4] != m_id)); }
 
 public:
-	int					*m_ptr;
 	sf::CircleShape		m_rect;
 	float				*m_position;
 	std::string			m_name;

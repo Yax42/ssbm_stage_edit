@@ -29,7 +29,6 @@ namespace Coll
 		virtual void	act(int *data);
 
 	public:
-		int					*m_ptr;
 		sf::CircleShape		m_rect;
 		float				*m_position;
 		//int					*m_flags;

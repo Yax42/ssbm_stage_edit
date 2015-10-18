@@ -4,9 +4,80 @@
 #include "GrGroundData.h"
 #include "Window.h"
 
-int									*GrGroundData::m_ptr = NULL;
-float								*GrGroundData::m_floatPtr = NULL;
-int									*GrGroundData::m_deepPtr = NULL;
+GrGroundData	*GrGroundData::Instance = NULL;
+
+const std::vector<std::string> GrGroundData::m_labels =
+{
+	"Entire stage size",
+	"",
+	"",
+	"",
+	"",
+	"?Minimum tilt & tilt scaling",
+	"?Horizontal rotation factor",
+	"?Vertical rotation factor",
+	"Fixed-ness of camera",
+	"Character bubble buffer multiplier",
+	"Camera speed smoothness",
+	"?Unknown 1",
+	"?Pause minimum Z position",
+	"?Pause initial Z position",
+	"?Pause max Z position",
+	"",
+	"?Pause max angle up",
+	"?Pause max angle left",
+	"?Pause max angle right",
+	"?Pause max angle down",
+	"?Unknown 3",
+	"?Unknown 4",
+	"?Unknown 5",
+	"?Unknown 6",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"Pointer to ? table",
+	"Nb entries in ? table",
+	"bble col TL",
+	"bble col TM",
+	"bble col TR",
+	"bble col ST",
+	"bble col SM",
+	"bble col SB",
+	"bble col BL",
+	"bble col BM",
+	"bble col BR",
+};
+GrGroundData::GrGroundData(int *ptr) : Ptr(ptr, m_labels, "GrGroundData", 0, false)
+{
+	m_floatPtr = (float *)m_ptr;
+}
+
+GrGroundData::~GrGroundData()
+{
+
+}
+
+void		GrGroundData::init(int *ptr)
+{
+	Instance = new GrGroundData(ptr);
+}
 
 void		GrGroundData::print()
 {
@@ -18,17 +89,6 @@ void		GrGroundData::print()
 void		GrGroundData::display()
 {
 	assert(m_ptr != NULL); 
-}
-
-void		GrGroundData::load(int *ptr)
-{
-	m_deepPtr = ptr;
-	m_ptr = Data::get<int>(*ptr);
-	m_floatPtr = (float *) m_ptr;
-}
-
-void		GrGroundData::clean()
-{
 }
 
 void		GrGroundData::act()

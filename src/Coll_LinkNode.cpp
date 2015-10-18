@@ -14,21 +14,21 @@ namespace Coll
 	LinkNode::LinkNode(int *ptr, int id) : ANode(ptr, m_labels, "CollisionLinkNode", id, 0, NULL, true)
 	{
 		m_type = NodeType::LINK;
-		m_shortPtr = (short *) ptr;
+		m_shortPtr = (short *) m_ptr;
 		m_sizeFactor = 4;
 		m_flag[0] = &((Byte*) &m_ptr[I_FLAG])[1];
 		m_flag[1] = &((Byte*) &m_ptr[I_FLAG])[2];
 		m_flag[2] = &((Byte*) &m_ptr[I_FLAG])[0];
 		m_flag[3] = &((Byte*) &m_ptr[I_FLAG])[3];
 
-		m_correct =	CollData::m_count > m_shortPtr[LINK1_F]
-					&& CollData::m_count > m_shortPtr[LINK1_T]
-					&& ((CollData::m_count > m_shortPtr[LINK2_F]
-					&& CollData::m_count > m_shortPtr[LINK2_T])
+		m_correct =	CollData::Instance->m_count > m_shortPtr[LINK1_F]
+					&& CollData::Instance->m_count > m_shortPtr[LINK1_T]
+					&& ((CollData::Instance->m_count > m_shortPtr[LINK2_F]
+					&& CollData::Instance->m_count > m_shortPtr[LINK2_T])
 					|| (m_shortPtr[LINK2_F] == -1 && m_shortPtr[LINK2_T] == -1));
 		if (!m_correct)
 		{
-			std::cout << "Fake link" << CollData::m_count
+			std::cout << "Fake link" << CollData::Instance->m_count
 				<< " " << m_shortPtr[LINK1_F]
 				<< " " << m_shortPtr[LINK1_T]
 				<< " " << m_shortPtr[LINK2_F]
@@ -101,23 +101,23 @@ namespace Coll
 
 	sf::Vector2f	LinkNode::getNodePos(int id)
 	{
-		return CollData::m_nodes[m_shortPtr[id]]->pos();
+		return CollData::Instance->m_nodes[m_shortPtr[id]]->pos();
 	}
 
 	sf::Vector2f	LinkNode::getLinkPos(int id)
 	{
-		return CollData::m_links[m_shortPtr[id]]->pos();
+		return CollData::Instance->m_links[m_shortPtr[id]]->pos();
 	}
 
 	float			LinkNode::x() const
 	{
-		return (CollData::m_nodes[m_shortPtr[LINK1_F]]->x() +
-		CollData::m_nodes[m_shortPtr[LINK1_T]]->x()) / 2;
+		return (CollData::Instance->m_nodes[m_shortPtr[LINK1_F]]->x() +
+		CollData::Instance->m_nodes[m_shortPtr[LINK1_T]]->x()) / 2;
 	}
 	float			LinkNode::y() const
 	{
-		return (CollData::m_nodes[m_shortPtr[LINK1_F]]->y() +
-		CollData::m_nodes[m_shortPtr[LINK1_T]]->y()) / 2;
+		return (CollData::Instance->m_nodes[m_shortPtr[LINK1_F]]->y() +
+		CollData::Instance->m_nodes[m_shortPtr[LINK1_T]]->y()) / 2;
 	}
 	void			LinkNode::x(float x){}
 	void			LinkNode::y(float y){}

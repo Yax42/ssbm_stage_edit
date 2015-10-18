@@ -104,17 +104,18 @@ public:
 	};
 
 private:
-	GrGroundData();
+	static const std::vector<std::string> m_labels;
+private:
+	GrGroundData(int *ptr);
+public:
 	~GrGroundData();
 public:
-	static void			load(int *ptr);
-	static void			print();
-	static void			display();
-	static void			clean();
-	static void			act();
+	void			print();
+	void			display();
+	void			act();
 public:
-	static int									*m_ptr;
-	static float								*m_floatPtr;
-	static int									*m_deepPtr;
+	float				*m_floatPtr;
+	static void			init(int *ptr);
+	static GrGroundData	*Instance;
 	//static std::vector<Map::ObjectGroup *>		m_groups;
 };

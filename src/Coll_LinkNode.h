@@ -60,7 +60,6 @@ namespace Coll
 		sf::Vector2f			getLinkPos(int id);
 
 	public:
-		int			*m_ptr;
 		short		*m_shortPtr;
 		sf::Vertex	m_line[2];
 		bool		m_correct;
