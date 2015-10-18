@@ -137,7 +137,7 @@ void		Worker::print()
 	std::cout << "Void1 " << m_header[Header::VOID1] << std::endl;
 	std::cout << "Void2 " << m_header[Header::VOID2] << std::endl << std::endl;;
 
-#if 0 // print sections list
+#if 1 // print sections list
 	for (unsigned int i = 0; i < m_images.size(); i++)
 		m_images[i]->print();
 #endif

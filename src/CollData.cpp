@@ -16,8 +16,8 @@ const std::vector<std::string> CollData::m_labels =
 	"Ref_right",
 	"Ref_left",
 	"M2",
-	"Elems",
-	"Elem_count",
+	"Areas",
+	"Area_count",
 	"Mistery",
 };
 
@@ -50,13 +50,13 @@ void CollData::load()
 	}
 
 	//ELEM
-	m_countElem = m_ptr[ELEM_COUNT];
-	int		*ptrToElems = Data::get<int>(m_ptr[ELEMS]);
-	std::cout << m_countElem << " " << m_ptr[ELEMS] << std::endl;
-	for (int i = 0; i < m_countElem; i++)
+	m_countArea = m_ptr[ELEM_COUNT];
+	int		*ptrToAreas = Data::get<int>(m_ptr[ELEMS]);
+	std::cout << m_countArea << " " << m_ptr[ELEMS] << std::endl;
+	for (int i = 0; i < m_countArea; i++)
 	{
-		m_elems.push_back(new Coll::ElemNode(ptrToElems + i * 10, i));
-		//m_elems[i]->print();
+		m_areas.push_back(new Coll::AreaNode(ptrToAreas + i * 10, i));
+		//m_areas[i]->print();
 	}
 
 	/*
@@ -82,11 +82,11 @@ CollData::~CollData()
 void		CollData::print()
 {
 	assert(m_ptr != NULL); 
-	std::cout << "CollData\tptr " << Data::getId(m_ptr) << "\tNodePtr:" << m_ptr[LOCATIONS] << "\tLinkPtr:" << m_ptr[LINKS] << "\tElemPtr:" << m_ptr[ELEMS] << std::endl;
+	std::cout << "CollData\tptr " << Data::getId(m_ptr) << "\tNodePtr:" << m_ptr[LOCATIONS] << "\tLinkPtr:" << m_ptr[LINKS] << "\tAreaPtr:" << m_ptr[ELEMS] << std::endl;
 	std::cout << "M2:\t" << Math::toStr<short>(m_ptr[M2], 0) << "\t" << Math::toStr<short>(m_ptr[M2], 1) << std::endl;
 	std::cout << "Myste:\t" << Math::toStr<short>(m_ptr[MISTERY], 0) << "\t" << Math::toStr<short>(m_ptr[MISTERY], 1) << std::endl;
 	return ;
-	std::cout << "CollData\tptr " << ""  << "\tNodeCount:" << m_count << "\tLinkCount:" << m_countLink << "\tElemCount:" << m_countElem << std::endl;
+	std::cout << "CollData\tptr " << ""  << "\tNodeCount:" << m_count << "\tLinkCount:" << m_countLink << "\tAreaCount:" << m_countArea << std::endl;
 	std::cout << "Top:\t" << Math::toStr<short>(m_ptr[REF_TOP], 0) << "\t" << Math::toStr<short>(m_ptr[REF_TOP], 1) << std::endl;
 	std::cout << "Bot:\t" << Math::toStr<short>(m_ptr[REF_BOT], 0) << "\t" << Math::toStr<short>(m_ptr[REF_BOT], 1) << std::endl;
 	std::cout << "Right:\t" << Math::toStr<short>(m_ptr[REF_RIGHT], 0) << "\t" << Math::toStr<short>(m_ptr[REF_RIGHT], 1) << std::endl;
@@ -119,12 +119,12 @@ void			CollData::autoResolve()
 	std::cout << "--------------------------------------" << std::endl;
 	for (int j = 0; j < 4; j++)
 	{
-		for (int i = 0; i < m_countElem; i++)
+		for (int i = 0; i < m_countArea; i++)
 		{
-			count[j] += m_elems[i]->m_shortPtr[j * 2];
-			if (m_elems[i]->m_shortPtr[j * 2]
-					&& m_elems[i]->m_shortPtr[j * 2 + 1] < min[j])
-				min[j] = m_elems[i]->m_shortPtr[j * 2 + 1];
+			count[j] += m_areas[i]->m_shortPtr[j * 2];
+			if (m_areas[i]->m_shortPtr[j * 2]
+					&& m_areas[i]->m_shortPtr[j * 2 + 1] < min[j])
+				min[j] = m_areas[i]->m_shortPtr[j * 2 + 1];
 		}
 		if (min[j] < 1000)
 			((short *)m_ptr)[9 + j * 2] = min[j];

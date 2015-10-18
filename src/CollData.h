@@ -5,7 +5,7 @@
 #include "Window.h"
 #include "Coll_Node.h"
 #include "Coll_LinkNode.h"
-#include "Coll_ElemNode.h"
+#include "Coll_AreaNode.h"
 
 class CollData : Ptr
 {
@@ -40,10 +40,10 @@ public:
 public:
 	int									m_count;
 	int									m_countLink;
-	int									m_countElem;
+	int									m_countArea;
 	std::vector<Coll::Node *>			m_nodes;
 	std::vector<Coll::LinkNode *>		m_links;
-	std::vector<Coll::ElemNode *>		m_elems;
+	std::vector<Coll::AreaNode *>		m_areas;
 public:
 	static CollData					*Instance;
 	static void							init(int *ptr);

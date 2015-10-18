@@ -143,8 +143,8 @@ void					Window::act()
 				}
 				else if (m_tmp[Var::ID] == 2)
 				{
-					if (m_tmp[Var::VAL] < CollData::Instance->m_elems.size())
-						CollData::Instance->m_elems[m_tmp[Var::VAL]]->select();
+					if (m_tmp[Var::VAL] < CollData::Instance->m_areas.size())
+						CollData::Instance->m_areas[m_tmp[Var::VAL]]->select();
 				}
 			}
 			else if (m_tmp[Var::TYPE] == -2)

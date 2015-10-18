@@ -6,10 +6,8 @@ namespace Coll
 {
 	const std::vector<std::string> Node::m_labels =
 	{
-		"Link1",
-		"Link2",
-		"NegOne",
-		"Flag",
+		"X",
+		"Y",
 	};
 	Node::Node(int *ptr, int id, int deep) : ANode(ptr, m_labels, "CollNode", id, deep, &m_rect, true)
 	{
