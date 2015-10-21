@@ -12,6 +12,9 @@
 *.la
 *.a
 
-SFML\*
-Debug\*
-Release\*
+
+Debug/
+Release/
+SFML/
+
+*.dat
