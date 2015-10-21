@@ -18,10 +18,10 @@ int				Data::m_stringPtr = -1;
 int				Data::Dummy[100] = {0};
 
 template <class T>
-void	fixEndian(T &val) // to little endian
+void	fixEndian(T &val) // to big endian
 {
 	static const char SwapTest[2] = { 1, 0 };
-	if( *(short *) SwapTest == 1)
+	if( *(short *) SwapTest == 1) // test if my computer is big endian
 	{
 		union
 		{

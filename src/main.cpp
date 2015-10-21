@@ -9,7 +9,7 @@
 
 int		main(int ac, char **av)
 {
-#if 0
+#if 1
 	Window::init();
 	Resources::init();
 	Data::read("../data/test.dat");

@@ -7,10 +7,10 @@ CollData	*CollData::Instance = NULL;
 
 const std::vector<std::string> CollData::m_labels =
 {
-	"Locations",
-	"Number",
+	"Spots",
+	"Spots_count",
 	"Links",
-	"Link_count",
+	"Links_count",
 	"Ref_top",
 	"Ref_bot",
 	"Ref_right",

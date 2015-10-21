@@ -152,9 +152,10 @@ void		Worker::print()
 		*/
 
 	//Data::print(107360, 120);
-	MapHead::print();
+	//MapHead::print();
 
 	//CollData::print();
+	GrGroundData::Instance->print();
 }
 
 void		Worker::display()

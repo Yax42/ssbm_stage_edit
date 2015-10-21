@@ -226,7 +226,9 @@ void					Window::act()
 			m_editing = true;
 		}
 
-		if (m_justPressed[sf::Keyboard::Space])
+		if (m_justPressed[sf::Keyboard::Dash])
+			BytesMatrix::Instance->numberPressed(-3);
+		else if (m_justPressed[sf::Keyboard::Space])
 			BytesMatrix::Instance->numberPressed(-2);
 		else if (m_justPressed[sf::Keyboard::Period])
 			BytesMatrix::Instance->numberPressed(-1);
