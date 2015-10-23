@@ -1,6 +1,7 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "DynamicVar.h"
+#include "Search.h"
 
 #define g_window (*Window::Instance)
 
@@ -73,6 +74,7 @@ public:
 	float					m_zoomTotal;
 	int						m_tmp[10];
 	DynamicVar				m_vars[10];
+	Search					m_search;
 
 	bool					m_focus;
 	bool					m_editing;

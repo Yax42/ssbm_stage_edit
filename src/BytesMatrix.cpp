@@ -6,18 +6,27 @@
 #include "SFML\Graphics.hpp"
 
 BytesMatrix			*BytesMatrix::Instance = NULL;
+sf::Vector2f			BytesMatrix::ButtonsRects[COUNT][2] =
+{
+	{ sf::Vector2f(0, 0), sf::Vector2f(0, 0)},
+	{ sf::Vector2f(0, 940), sf::Vector2f(333, 970)},
+	{ sf::Vector2f(0, 970), sf::Vector2f(333, 1000)},
+	{ sf::Vector2f(333, 970), sf::Vector2f(666, 1000)},
+	{ sf::Vector2f(666, 970), sf::Vector2f(1000, 1000)},
+	{ sf::Vector2f(333, 940), sf::Vector2f(666, 970)},
+	{ sf::Vector2f(666, 940), sf::Vector2f(1000, 970)}
+};
 
-BytesMatrix::BytesMatrix(int *firstPtr, float buttonSize)
+BytesMatrix::BytesMatrix(int *firstPtr, float buttonSize, Search &search)
 {
 	int firstIdx = 0;
 	m_position = Data::getId(firstPtr);
 	m_buttonSize = buttonSize;
-	Next = NULL;
-	m_number = "0";
-	generateMatrix(firstPtr);
+	m_ptr = firstPtr;
+	init(search);
 }
 
-BytesMatrix::BytesMatrix(int pos, float buttonSize)
+BytesMatrix::BytesMatrix(int pos, float buttonSize, Search &search)
 {
 	if (pos + 20 > Data::m_fileSize)
 		pos = Data::m_fileSize - 20;
@@ -26,14 +35,16 @@ BytesMatrix::BytesMatrix(int pos, float buttonSize)
 	m_position = pos;
 	int firstId = pos;//(intPos) / (Window::width / (buttonSize + 1));
 	firstId = (firstId / 4) * 4;
-	int *firstPtr = Data::get<int>(firstId);
-	Next = NULL;
-	m_number = "0";
-	generateMatrix(firstPtr);
+	m_ptr = Data::get<int>(firstId);
+	init(search);
 }
 
-void		BytesMatrix::generateMatrix(int *ptr)
+void		BytesMatrix::init(Search &search)
 {
+	m_current = m_ptr;
+	Next = NULL;
+	m_number = "0";
+	int *ptr = m_ptr;
 	int idx = 0;
 	for (int i = 0; i < Ptr::List.size(); i++)
 	{
@@ -133,42 +144,20 @@ void		BytesMatrix::generateMatrix(int *ptr)
 			, sf::Color::Black
 			);
 	}
+
+	for (int i = 1; i < COUNT; i++)
 	{
-		sf::Vector2f from = sf::Vector2f(0, 910);
-		sf::Vector2f to = sf::Vector2f(1000, 940);
-		m_buttons.emplace_back(
-			"0"
-			, from
-			, to
-			, sf::Color::White
-			, 2
-			, sf::Color::Black
-			);
-	}
-	{
-		sf::Vector2f from = sf::Vector2f(0, 940);
-		sf::Vector2f to = sf::Vector2f(1000, 970);
 		m_buttons.emplace_back(
 			""
-			, from
-			, to
+			, ButtonsRects[i][0]
+			, ButtonsRects[i][1]
 			, sf::Color::White
 			, 2
 			, sf::Color::Black
 			);
 	}
-	{
-		sf::Vector2f from = sf::Vector2f(0, 970);
-		sf::Vector2f to = sf::Vector2f(1000, 1000);
-		m_buttons.emplace_back(
-			""
-			, from
-			, to
-			, sf::Color::White
-			, 2
-			, sf::Color::Black
-			);
-	}
+	m_buttons[VALUE].setText("0");
+	m_buttons[SEARCH].setText(search.Found ? std::to_string(search.m_i + 1) + " / " + std::to_string(search.Count) : "-");
 }
 
 
@@ -191,7 +180,7 @@ void		BytesMatrix::process(sf::Vector2f &mouse, bool leftMouse, bool rightMouse,
 	{
 		if ((*it).process(mouse, leftMouse, rightMouse, ctrl))
 		{
-
+			m_current = (*it).m_ptr;
 			std::string name = "Header";
 			for (int i = 0; i < Worker::m_images.size(); i++)
 			{
@@ -202,8 +191,9 @@ void		BytesMatrix::process(sf::Vector2f &mouse, bool leftMouse, bool rightMouse,
 				else
 					break;
 			}
-			m_buttons[3].setText(name);
-			m_buttons[2].setText((*it).m_ptrObject != NULL ? (*it).m_ptrObject->Name + " #" + std::to_string((*it).m_ptrObject->m_id) : "");
+			m_buttons[MOTHER].setText("Mother: " + name);
+			m_buttons[OFFSET].setText("#" + std::to_string(Data::getId((*it).m_ptr)));
+			m_buttons[NAME].setText((*it).m_ptrObject != NULL ? (*it).m_ptrObject->Name + " #" + std::to_string((*it).m_ptrObject->m_id) : "");
 			if ((*it).Jump)
 			{
 				Next = Data::get<int>(*(*it).m_ptr);
@@ -243,5 +233,5 @@ void		BytesMatrix::numberPressed(int v)
 	}
 	catch (...)
 	{}
-	m_buttons[1].setText(m_number);
+	m_buttons[VALUE].setText(m_number);
 }

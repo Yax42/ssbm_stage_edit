@@ -24,7 +24,8 @@ void		Window::init()
 
 Window::Window() : m_window(sf::VideoMode(width, height), "Melee mapping"), m_view()
 {
-	m_editing = false;
+	m_search = NULL;
+	m_editing = true;
 	m_zoomTotal = 1;
 	m_focus = true;
 	m_isSelecting = false;
@@ -181,7 +182,7 @@ void					Window::act()
 			{
 				int btSize = BytesMatrix::Instance->m_buttonSize;
 				delete BytesMatrix::Instance;
-				BytesMatrix::Instance = new BytesMatrix(node->m_ptr, btSize);
+				BytesMatrix::Instance = new BytesMatrix(node->m_ptr, btSize, m_search);
 				m_editing = false;
 				m_window.setView(m_neutralView);
 			}
@@ -194,7 +195,7 @@ void					Window::act()
 			int btSize = BytesMatrix::Instance->m_buttonSize;
 			auto next = BytesMatrix::Instance->Next;
 			delete BytesMatrix::Instance;
-			BytesMatrix::Instance = new BytesMatrix(next, btSize);
+			BytesMatrix::Instance = new BytesMatrix(next, btSize, m_search);
 		}
 		else if (m_wheelDelta != 0)
 		{
@@ -203,7 +204,7 @@ void					Window::act()
 			delete BytesMatrix::Instance;
 			if (m_keyPressed[sf::Keyboard::LControl])
 			{
-				float	deltaZoom = 1 + Math::sgn(m_wheelDelta) * 0.2;
+				float	deltaZoom = 1 + Math::sgn(m_wheelDelta) * 0.2f;
 				int		time = Math::abs(m_wheelDelta);
 				float zoom = Math::pow(deltaZoom, time);
 				btSize *= zoom;
@@ -214,9 +215,35 @@ void					Window::act()
 				factor = (factor < 1 ? 1 : factor);
 				//pos -= m_wheelDelta * factor;
 				int lineSize = (1000 / (btSize + 1));
-				pos -= m_wheelDelta * factor * lineSize * 4;
+				pos -= m_wheelDelta * factor * lineSize * (m_keyPressed[sf::Keyboard::LShift] ? 120 : 4);
 			}
-			BytesMatrix::Instance = new BytesMatrix(pos, btSize);
+			BytesMatrix::Instance = new BytesMatrix(pos, btSize, m_search);
+		}
+		else if (m_justPressed[sf::Keyboard::S])
+		{
+			m_search = Search(BytesMatrix::Instance->m_current);
+			int pos = BytesMatrix::Instance->m_position;
+			int btSize = BytesMatrix::Instance->m_buttonSize;
+			delete BytesMatrix::Instance;
+			BytesMatrix::Instance = new BytesMatrix(pos, btSize, m_search);
+		}
+		else if (m_justPressed[sf::Keyboard::D])
+		{
+			if (m_search.Found)
+			{
+				int btSize = BytesMatrix::Instance->m_buttonSize;
+				delete BytesMatrix::Instance;
+				BytesMatrix::Instance = new BytesMatrix(m_search.next(), btSize, m_search);
+			}
+		}
+		else if (m_justPressed[sf::Keyboard::F])
+		{
+			if (m_search.Found)
+			{
+				int btSize = BytesMatrix::Instance->m_buttonSize;
+				delete BytesMatrix::Instance;
+				BytesMatrix::Instance = new BytesMatrix(m_search.m_origin, btSize, m_search);
+			}
 		}
 
 		if (m_justPressed[sf::Keyboard::N])
@@ -245,7 +272,7 @@ void					Window::act()
 		BytesMatrix::Instance->process(m_mousePosFloat, m_mouseJustPressed[sf::Mouse::Left], m_mouseJustPressed[sf::Mouse::Right], m_keyPressed[sf::Keyboard::LControl]);
 	}
 	//Save
-	if (m_justPressed[sf::Keyboard::Delete])
+	if (m_justPressed[sf::Keyboard::Delete] || m_justPressed[sf::Keyboard::Tab])
 	{
 		if (Data::write("../data/test.dat"))
 			std::cout << "saved" << std::endl;

@@ -70,8 +70,8 @@ public:
 	int		*m_strOffset;
 	char	*m_str;
 
-	bool	isEqual(char *str)
+	bool	isEqual(const std::string &str)
 	{
-		return (std::string(m_str).compare(str) == 0);
+		return std::string(m_str) == str;
 	}
 };

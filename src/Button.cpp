@@ -31,7 +31,8 @@ Button::Button(
 	m_text.setString(text);
 	m_text.setCharacterSize(size.y * 0.5f);
 	m_text.setColor(sf::Color::Black);
-	m_text.setPosition(m_from + size * 0.1f);
+	m_text.setPosition(m_from + sf::Vector2f(10.f, size.y * 0.2f));
+
 
 }
 

@@ -33,6 +33,7 @@ public:
 	static void				strongPrint(int idx, int count = 5, int deepLimit = 5, int tab = 0);
 	static int				getId(void *ptr) { return (((int)ptr) - ((int)m_data)); }
 
+	static int				*m_intData;
 private:
 	static void				solveFileEndian();
 

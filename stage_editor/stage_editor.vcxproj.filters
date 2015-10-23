@@ -90,6 +90,12 @@
     <ClInclude Include="..\src\Coll_AreaNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\WriteDataInFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Search.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Data.cpp">
@@ -145,6 +151,12 @@
     </ClCompile>
     <ClCompile Include="..\src\Coll_AreaNode.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WriteDataInFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Search.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

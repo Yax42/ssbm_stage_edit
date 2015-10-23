@@ -90,9 +90,11 @@
     <ClInclude Include="..\src\Object.h" />
     <ClInclude Include="..\src\Ptr.h" />
     <ClInclude Include="..\src\Resources.h" />
+    <ClInclude Include="..\src\Search.h" />
     <ClInclude Include="..\src\TestPosition.h" />
     <ClInclude Include="..\src\Window.h" />
     <ClInclude Include="..\src\Worker.h" />
+    <ClInclude Include="..\src\WriteDataInFile.h" />
     <ClInclude Include="Vector2.h" />
   </ItemGroup>
   <ItemGroup>
@@ -112,8 +114,10 @@
     <ClCompile Include="..\src\Node.cpp" />
     <ClCompile Include="..\src\Ptr.cpp" />
     <ClCompile Include="..\src\Resources.cpp" />
+    <ClCompile Include="..\src\Search.cpp" />
     <ClCompile Include="..\src\Window.cpp" />
     <ClCompile Include="..\src\Worker.cpp" />
+    <ClCompile Include="..\src\WriteDataInFile.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

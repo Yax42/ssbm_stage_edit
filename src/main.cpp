@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Resources.h"
 #include "BytesMatrix.h"
+#include "WriteDataInFile.h"
 
 
 int		main(int ac, char **av)
@@ -14,12 +15,14 @@ int		main(int ac, char **av)
 	Resources::init();
 	Data::read("../data/test.dat");
 	Worker::loadData();
-	BytesMatrix::Instance = new BytesMatrix(300.f, 128.f);
+	BytesMatrix::Instance = new BytesMatrix(0, 64.f, Search());
 
 	Worker::print();
 	g_window.loop();
 	//system("pause");
 	return (0);
+#elif 1
+	WriteDataInFile::Do();
 #else
 	if (ac != 3)
 	{

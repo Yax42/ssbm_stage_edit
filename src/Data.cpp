@@ -14,6 +14,7 @@ Byte			*Data::m_buffer = NULL;
 int				*Data::m_intBuffer = NULL;
 int				Data::m_fileSize;	//0x00
 Byte			*Data::m_data;		//0x20
+int				*Data::m_intData;
 int				Data::m_stringPtr = -1;
 int				Data::Dummy[100] = {0};
 
@@ -43,12 +44,12 @@ bool		Data::read(const std::string &name)
 	BOOL bErrorFlag = FALSE;
 
 	hFile = CreateFile(name.c_str(),                // name of the write
-					   GENERIC_READ,          // open for reading
-					   FILE_SHARE_READ,       // share for reading
-					   NULL,                  // default security
-					   OPEN_EXISTING,         // existing file only
-					   FILE_ATTRIBUTE_NORMAL, // normal file
-					   NULL);   
+					GENERIC_READ,          // open for reading
+					FILE_SHARE_READ,       // share for reading
+					NULL,                  // default security
+					OPEN_EXISTING,         // existing file only
+					FILE_ATTRIBUTE_NORMAL, // normal file
+					NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE) 
 	{ 
@@ -90,6 +91,7 @@ bool		Data::read(const std::string &name)
 		}
 	}
 	m_data = (Byte *)&m_intBuffer[8];
+	m_intData = &m_intBuffer[8];
 	for (int i = 1; i < 8; i++)
 		fixEndian(m_intBuffer[i]);
 	CloseHandle(hFile);

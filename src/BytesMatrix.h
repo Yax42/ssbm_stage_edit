@@ -1,12 +1,27 @@
 #pragma once
+#include "Search.h"
 #include "ByteButton.h"
 
 class BytesMatrix
 {
+private:
+	enum EButton
+	{
+		CUROSOR,
+		VALUE,
+		NAME,
+		MOTHER,
+		OFFSET,
+		SEARCH,
+		OTHER,
+		COUNT,
+	};
+private:
+	static sf::Vector2f			ButtonsRects[COUNT][2];
 public:
-	BytesMatrix(int *firstPtr, float buttonSize);
-	BytesMatrix(int pos, float buttonSize);
-	void		generateMatrix(int *ptr);
+	BytesMatrix(int *firstPtr, float buttonSize, Search &search);
+	BytesMatrix(int pos, float buttonSize, Search &search);
+	void		init(Search &search);
 	void		display();
 	void		process(sf::Vector2f &mouse, bool leftMouse, bool rightMouse, bool ctrl);
 	void		numberPressed(int v);
@@ -16,6 +31,8 @@ public:
 	std::vector<Button>			m_buttons;
 	int							m_position;
 	float						m_buttonSize;
+	int							*m_ptr;
+	int							*m_current;
 	int							*Next;
 	std::string					m_number;
 
