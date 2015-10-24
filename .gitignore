@@ -12,11 +12,14 @@
 *.la
 *.a
 
+*.exe
 
 Debug/
 Release/
 SFML/
+bin/
 
+*.iso
 *.dat
 *.suo
 *.opensdf
