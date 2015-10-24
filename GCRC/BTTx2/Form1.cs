@@ -73,79 +73,85 @@ namespace BTTx2
 				groupBox1.Enabled = value;
 			}
 		}
+		private Process initProc()
+		{
+			Process p = new Process();
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.CreateNoWindow = true;
+			p.StartInfo.RedirectStandardOutput = true;
+			return p;
+		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
+			MyEnabled = false;
 			this.label3.Text = "Export " + FileName + ": ";
-			try
+			string aa = numericUpDown1.Value.ToString();
+			progressBar1.Increment(20);
+			Process p = initProc();
+			p.StartInfo.FileName = "gcrc";
+			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
+			p.Start();
+			string Output = p.StandardOutput.ReadToEnd();
+			p.Exited += Rescale1;
+		}
+
+		private void Rescale1(object sender, EventArgs e)
+		{
+
+			if (!string.IsNullOrEmpty(Output))
 			{
-				string aa = numericUpDown1.Value.ToString();
-				progressBar1.Increment(20);
-				progressBar1.Refresh();
-				Process p = new Process();
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.CreateNoWindow = true;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.FileName = "gcrc";
-				p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
+				this.label3.Text += Output;
+				MyEnabled = true;
+			}
+			else
+			{
+				this.label3.Text += "ok\nRescale " + FileName + ": ";
+				progressBar1.Increment(30);
+				Process p = initProc();
+				p.StartInfo.FileName = "msr";
+				p.StartInfo.Arguments = "tmp tmp2 " + numericUpDown1.Value.ToString().Replace(',', '.');
 				p.Start();
-				string output = p.StandardOutput.ReadToEnd();
-				p.WaitForExit();
-				if (!string.IsNullOrEmpty(output))
-				{
-					this.label3.Text += output;
-				}
-				else
-				{
-					this.label3.Text += "ok\nRescale " + FileName + ": ";
-					progressBar1.Increment(30);
-					progressBar1.Refresh();
-					p = new Process();
-					p.StartInfo.UseShellExecute = false;
-					p.StartInfo.CreateNoWindow = true;
-					p.StartInfo.RedirectStandardOutput = true;
-					p.StartInfo.FileName = "msr";
-					p.StartInfo.Arguments = "tmp tmp2 " + numericUpDown1.Value.ToString().Replace(',', '.');
-					p.Start();
-					output = p.StandardOutput.ReadToEnd();
-					p.WaitForExit();
-					if (!string.IsNullOrEmpty(output))
-					{
-						this.label3.Text += output;
-					}
-					else
-					{
-						this.label3.Text += "ok\nImport back " + FileName + ": ";
-						//Task.Delay(3000).Wait();
-						progressBar1.Increment(30);
-						progressBar1.Refresh();
-						p = new Process();
-						p.StartInfo.UseShellExecute = false;
-						p.StartInfo.CreateNoWindow = true;
-						p.StartInfo.RedirectStandardOutput = true;
-						p.StartInfo.FileName = "gcrc";
-						p.StartInfo.Arguments = "-i \"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp2";
-						p.Start();
-						output = p.StandardOutput.ReadToEnd();
-						p.WaitForExit();
-						if (!string.IsNullOrEmpty(output))
-						{
-							this.label3.Text += output;
-						}
-						else
-						{
-							this.label3.Text += "ok";
-							progressBar1.Increment(20);
-							label3.Text += "\nDone";
-						}
-					}
-				}
+				Output = p.StandardOutput.ReadToEnd();
+				p.Exited += Rescale2;
 			}
-			catch (Exception exp)
+		}
+
+		private void Rescale2(object sender, EventArgs e)
+		{
+			if (!string.IsNullOrEmpty(Output))
 			{
-				label3.Text = exp.Message;
+				this.label3.Text += Output;
+				MyEnabled = true;
 			}
-			progressBar1.Value = 0;
+			else
+			{
+				this.label3.Text += "ok\nImport back " + FileName + ": ";
+				progressBar1.Increment(30);
+				Process p = initProc();
+				p.StartInfo.FileName = "gcrc";
+				p.StartInfo.Arguments = "-i \"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp2";
+				p.Start();
+				Output = p.StandardOutput.ReadToEnd();
+				p.Exited += Rescale3;
+			}
+		}
+
+		private void Rescale3(object sender, EventArgs e)
+		{
+			if (!string.IsNullOrEmpty(Output))
+			{
+				this.label3.Text += Output;
+			}
+			else
+			{
+				this.label3.Text += "ok";
+				progressBar1.Increment(20);
+				label3.Text += "\nDone";
+				progressBar1.Value = 0;
+			}
+
+			MyEnabled = true;
 		}
 
 		private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -206,50 +212,49 @@ namespace BTTx2
 
 		}
 
+		private string Output;
 		private void button2_Click(object sender, EventArgs e)
 		{
+			MyEnabled = false;
 			this.label3.Text = "Export " + FileName + ": ";
-			try
+			string aa = numericUpDown1.Value.ToString();
+			progressBar1.Increment(20);
+			Process p = initProc();
+			p.StartInfo.FileName = "gcrc";
+			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
+			p.Start();
+			Output = p.StandardOutput.ReadToEnd();
+			p.Exited += EventGetScale2;
+			p.WaitForExit();
+		}
+
+		private void EventGetScale2(object sender, EventArgs e)
+		{
+			if (!string.IsNullOrEmpty(Output))
 			{
-				string aa = numericUpDown1.Value.ToString();
-				progressBar1.Increment(20);
-					progressBar1.Refresh();
-				Process p = new Process();
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.CreateNoWindow = true;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.FileName = "gcrc";
-				p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
+				this.label3.Text += Output;
+				MyEnabled = true;
+			}
+			else
+			{
+				this.label3.Text += "ok\nGet " + FileName + "'s scale: ";
+				progressBar1.Increment(30);
+				Process p = initProc();
+				p.StartInfo.FileName = "msr";
+				p.StartInfo.Arguments = "tmp";
 				p.Start();
-				string output = p.StandardOutput.ReadToEnd();
-				p.WaitForExit();
-				if (!string.IsNullOrEmpty(output))
-				{
-					this.label3.Text += output;
-				}
-				else
-				{
-					this.label3.Text += "ok\nGet " + FileName + "'s scale: ";
-					progressBar1.Increment(30);
-					progressBar1.Refresh();
-					p = new Process();
-					p.StartInfo.UseShellExecute = false;
-					p.StartInfo.CreateNoWindow = true;
-					p.StartInfo.RedirectStandardOutput = true;
-					p.StartInfo.FileName = "msr";
-					p.StartInfo.Arguments = "tmp";
-					p.Start();
-					output = p.StandardOutput.ReadToEnd();
-					p.WaitForExit();
-					this.label3.Text += "ok";
-					this.textBox1.Text = output;
-				}
+				Output = p.StandardOutput.ReadToEnd();
+				p.Exited += EventGetScale3;
 			}
-			catch (Exception exp)
-			{
-				label3.Text = exp.Message;
-			}
+
+		}
+
+		private void EventGetScale3(object sender, EventArgs e)
+		{
+			this.label3.Text += "ok";
+			this.textBox1.Text = Output;
 			progressBar1.Value = 0;
+			MyEnabled = true;
 		}
 
 		private void label2_Click(object sender, EventArgs e)
