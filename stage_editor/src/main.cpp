@@ -24,6 +24,8 @@ int		main(int ac, char **av)
 #elif 0
 	WriteDataInFile::Do();
 #else
+	try
+	{
 	if (ac != 2 && ac != 4)
 	{
 		std::cout << "error: correct usage is \'msr <file_name_from> <file_name_to> <scale>\'" << std::endl;
@@ -38,42 +40,51 @@ int		main(int ac, char **av)
 		return 0;
 	}
 
-	if (ac == 2)
-	{
-		Data::read(fileName);
-		Worker::loadData();
-		std::cout << GrGroundData::Instance->m_floatPtr[0] << std::endl;
-	}
-	else if (ac == 4)
-	{
-		float scale;
-		try
+		if (ac == 2)
 		{
-			scale = std::stof(av[3]);
+			Data::read(fileName);
+			Worker::loadData();
+			std::cout << GrGroundData::Instance->m_floatPtr[0] << std::endl;
 		}
-		catch (...)
+		else if (ac == 4)
 		{
-			std::cout << "error: \"" << av[3] << "\" is not in a good scale format (3.4, 0.01 and 99 are)" << std::endl;
-			return 0;
-		}
-		scale = ((int)(scale * 100)) / 100.f;
-		if (scale < 0.01f || scale > 100.f)
-		{
-			std::cout << "error: scale must be in the range of [0.01, 100.00] and right now it's " << std::to_string(scale) << std::endl;
-			return 0;
-		}
-		Data::read(fileName);
-		Worker::loadData();
+			float scale;
+			try
+			{
+				scale = std::stof(av[3]);
+			}
+			catch (...)
+			{
+				std::cout << "error: \"" << av[3] << "\" is not in a good scale format (3.4, 0.01 and 99 are)" << std::endl;
+				return 0;
+			}
+			scale = ((int)(scale * 100)) / 100.f;
+			if (scale < 0.01f || scale > 100.f)
+			{
+				std::cout << "error: scale must be in the range of [0.01, 100.00] and right now it's " << std::to_string(scale) << std::endl;
+				return 0;
+			}
+			Data::read(fileName);
+			Worker::loadData();
 
-		float previousScale = GrGroundData::Instance->m_floatPtr[0];
-		GrGroundData::Instance->m_floatPtr[0] = scale;
-		GrGroundData::Instance->m_ptr[3] = scale * GrGroundData::Instance->m_ptr[4] / previousScale;
-		GrGroundData::Instance->m_ptr[4] = scale * GrGroundData::Instance->m_ptr[4] / previousScale;
-		if (!Data::write(std::string(av[2])))
-		{
-			std::cout << "error: something went wrong and the file couldn't be saved correctly" << std::endl;
-			return (0);
+			float previousScale = GrGroundData::Instance->m_floatPtr[0];
+			GrGroundData::Instance->m_floatPtr[0] = scale;
+			GrGroundData::Instance->m_ptr[3] = scale * GrGroundData::Instance->m_ptr[4] / previousScale;
+			GrGroundData::Instance->m_ptr[4] = scale * GrGroundData::Instance->m_ptr[4] / previousScale;
+			if (!Data::write(std::string(av[2])))
+			{
+				std::cout << "error: something went wrong and the file couldn't be saved correctly" << std::endl;
+				return (0);
+			}
 		}
+	}
+	catch (const std::exception &exc)
+	{
+		std::cout << "error: " << exc.what() << std::endl;
+	}
+	catch (...)
+	{
+		std::cout << "error: " << "unable to process the file" << std::endl;
 	}
 	return (0);
 #endif

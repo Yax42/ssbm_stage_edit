@@ -65,6 +65,20 @@ namespace BTTx2
 		{
 			set
 			{
+				SetEnabled(value);
+			}
+
+		}
+		delegate void SetEnabledCallback(bool v);
+		private void SetEnabled(bool value)
+		{
+			if (this.textBox1.InvokeRequired)
+			{
+				SetEnabledCallback d = new SetEnabledCallback(SetEnabled);
+				this.Invoke(d, new object[] { value });
+			}
+			else
+			{
 				button1.Enabled = value;
 				button2.Enabled = value;
 				listBox1.Enabled = value;
@@ -79,6 +93,8 @@ namespace BTTx2
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.RedirectStandardOutput = true;
+			p.EnableRaisingEvents = true;
+
 			return p;
 		}
 
@@ -91,64 +107,61 @@ namespace BTTx2
 			Process p = initProc();
 			p.StartInfo.FileName = "gcrc";
 			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
-			p.Start();
-			string Output = p.StandardOutput.ReadToEnd();
 			p.Exited += Rescale1;
+			p.Start();
 		}
 
 		private void Rescale1(object sender, EventArgs e)
 		{
-
-			if (!string.IsNullOrEmpty(Output))
+			string output = ((Process)sender).StandardOutput.ReadToEnd();
+			if (!string.IsNullOrEmpty(output))
 			{
-				this.label3.Text += Output;
+				AddTextInfo(output);
 				MyEnabled = true;
 			}
 			else
 			{
-				this.label3.Text += "ok\nRescale " + FileName + ": ";
-				progressBar1.Increment(30);
+				AddTextInfo("ok\nRescale " + FileName + ": ");
+				ProgressBar(50);
 				Process p = initProc();
 				p.StartInfo.FileName = "msr";
 				p.StartInfo.Arguments = "tmp tmp2 " + numericUpDown1.Value.ToString().Replace(',', '.');
-				p.Start();
-				Output = p.StandardOutput.ReadToEnd();
 				p.Exited += Rescale2;
+				p.Start();
 			}
 		}
 
 		private void Rescale2(object sender, EventArgs e)
 		{
-			if (!string.IsNullOrEmpty(Output))
+			string output = ((Process)sender).StandardOutput.ReadToEnd();
+			if (!string.IsNullOrEmpty(output))
 			{
-				this.label3.Text += Output;
+				AddTextInfo(output);
 				MyEnabled = true;
 			}
 			else
 			{
-				this.label3.Text += "ok\nImport back " + FileName + ": ";
-				progressBar1.Increment(30);
+				AddTextInfo("ok\nImport back " + FileName + ": ");
+				ProgressBar(80);
 				Process p = initProc();
 				p.StartInfo.FileName = "gcrc";
 				p.StartInfo.Arguments = "-i \"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp2";
-				p.Start();
-				Output = p.StandardOutput.ReadToEnd();
 				p.Exited += Rescale3;
+				p.Start();
 			}
 		}
 
 		private void Rescale3(object sender, EventArgs e)
 		{
-			if (!string.IsNullOrEmpty(Output))
+			string output = ((Process)sender).StandardOutput.ReadToEnd();
+			if (!string.IsNullOrEmpty(output))
 			{
-				this.label3.Text += Output;
+				AddTextInfo(output);
 			}
 			else
 			{
-				this.label3.Text += "ok";
-				progressBar1.Increment(20);
-				label3.Text += "\nDone";
-				progressBar1.Value = 0;
+				AddTextInfo("ok\nDone");
+				ProgressBar(0);
 			}
 
 			MyEnabled = true;
@@ -212,7 +225,6 @@ namespace BTTx2
 
 		}
 
-		private string Output;
 		private void button2_Click(object sender, EventArgs e)
 		{
 			MyEnabled = false;
@@ -222,38 +234,86 @@ namespace BTTx2
 			Process p = initProc();
 			p.StartInfo.FileName = "gcrc";
 			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
+			p.Exited += new EventHandler(EventGetScale2);
 			p.Start();
-			Output = p.StandardOutput.ReadToEnd();
-			p.Exited += EventGetScale2;
-			p.WaitForExit();
 		}
 
 		private void EventGetScale2(object sender, EventArgs e)
 		{
-			if (!string.IsNullOrEmpty(Output))
+			string output = ((Process)sender).StandardOutput.ReadToEnd();
+			if (!string.IsNullOrEmpty(output))
 			{
-				this.label3.Text += Output;
+				AddTextInfo(output);
 				MyEnabled = true;
 			}
 			else
 			{
-				this.label3.Text += "ok\nGet " + FileName + "'s scale: ";
-				progressBar1.Increment(30);
+
+				AddTextInfo("ok\nGet " + FileName + "'s scale: ");
+				ProgressBar(60);
 				Process p = initProc();
 				p.StartInfo.FileName = "msr";
 				p.StartInfo.Arguments = "tmp";
-				p.Start();
-				Output = p.StandardOutput.ReadToEnd();
 				p.Exited += EventGetScale3;
+				p.Start();
 			}
 
+		}
+		delegate void AddTextInfoCallback(string text);
+		private void AddTextInfo(string text)
+		{
+			if (this.textBox1.InvokeRequired)
+			{
+				AddTextInfoCallback d = new AddTextInfoCallback(AddTextInfo);
+				this.Invoke(d, new object[] { text });
+			}
+			else
+			{
+				this.label3.Text += text;
+			}
+		}
+
+		delegate void ProgressBarCallback(int v);
+		private void ProgressBar(int v)
+		{
+			if (this.label3.InvokeRequired)
+			{
+				ProgressBarCallback d = new ProgressBarCallback(ProgressBar);
+				this.Invoke(d, new object[] { v });
+			}
+			else
+			{
+				progressBar1.Value = v;
+			}
+		}
+
+		delegate void ScaleBoxCallback(string text);
+		private void ScaleBox(string text)
+		{
+			if (this.textBox1.InvokeRequired)
+			{
+				ScaleBoxCallback d = new ScaleBoxCallback(ScaleBox);
+				this.Invoke(d, new object[] { text });
+			}
+			else
+			{
+				this.textBox1.Text = text;
+			}
 		}
 
 		private void EventGetScale3(object sender, EventArgs e)
 		{
-			this.label3.Text += "ok";
-			this.textBox1.Text = Output;
-			progressBar1.Value = 0;
+			string output = ((Process)sender).StandardOutput.ReadToEnd();
+			if (output.Contains("rror"))
+			{
+				AddTextInfo("" + output);
+			}
+			else
+			{
+				AddTextInfo("ok");
+				ScaleBox(output);
+				ProgressBar(0);
+			}
 			MyEnabled = true;
 		}
 

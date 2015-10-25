@@ -64,6 +64,9 @@ bool		Worker::loadData()
 	m_origin = m_header[TABLE_PTR] + m_header[NB_TABLE] * 4; 
 	m_strOrigin = m_origin + (m_header[NB_BASE] + BUGGY_OFFSET * 8) * 8;
 
+	if (m_strOrigin > Data::m_fileSize)
+		throw (new std::exception("unable to to process the file"));
+
 	Data::solveEndianTo(m_strOrigin);
 	Data::m_stringPtr = m_strOrigin + 0x20;
 
