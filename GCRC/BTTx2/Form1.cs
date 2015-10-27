@@ -44,6 +44,7 @@ namespace BTTx2
 		};
 
 		private string FileName;
+		private string FilePath { get { return "backup/" + FileName; } }
 		private string imgPath = "";
 		public Form1()
 		{
@@ -93,39 +94,67 @@ namespace BTTx2
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.RedirectStandardError = true;
 			p.EnableRaisingEvents = true;
 
 			return p;
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void CreateBackup()
 		{
-			MyEnabled = false;
-			this.label3.Text = "Export " + FileName + ": ";
-			string aa = numericUpDown1.Value.ToString();
-			progressBar1.Increment(20);
+			Directory.CreateDirectory("backup");
+			this.label3.Text = "Export backup " + FileName + ": ";
 			Process p = initProc();
 			p.StartInfo.FileName = "gcrc";
-			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
+			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "\"" + FilePath + "\"";
 			p.Exited += Rescale1;
 			p.Start();
 		}
 
-		private void Rescale1(object sender, EventArgs e)
+		private void button1_Click(object sender, EventArgs e)
 		{
-			string output = ((Process)sender).StandardOutput.ReadToEnd();
+			this.label3.Text = "";
+			progressBar1.Increment(40);
+			MyEnabled = false;
+			if (!File.Exists(FilePath))
+				CreateBackup();
+			else
+				Rescale1(null, null);
+		}
+
+		private bool ProcessErrors(string output, string error)
+		{
+			bool res = false;
 			if (!string.IsNullOrEmpty(output))
 			{
-				AddTextInfo(output);
+				AddTextInfo(output + " ");
+				res = true;
+			}
+			if (!string.IsNullOrEmpty(error))
+			{
+				AddTextInfo(error);
+				res = true;
+			}
+			return res;
+		}
+
+		private void Rescale1(object sender, EventArgs e)
+		{
+			string output = sender == null ? null : ((Process)sender).StandardOutput.ReadToEnd();
+			string errorOutput = sender == null ? null : ((Process)sender).StandardError.ReadToEnd();
+			if (ProcessErrors(output, errorOutput))
+			{
 				MyEnabled = true;
 			}
 			else
 			{
-				AddTextInfo("ok\nRescale " + FileName + ": ");
-				ProgressBar(50);
+				if (sender != null)
+					AddTextInfo("ok\n");
+				AddTextInfo("Rescale " + FileName + ": ");
+				ProgressBar(80);
 				Process p = initProc();
 				p.StartInfo.FileName = "msr";
-				p.StartInfo.Arguments = "tmp tmp2 " + numericUpDown1.Value.ToString().Replace(',', '.');
+				p.StartInfo.Arguments = "\"" + FilePath + "\" tmp2 " + numericUpDown1.Value.ToString().Replace(',', '.');
 				p.Exited += Rescale2;
 				p.Start();
 			}
@@ -134,15 +163,15 @@ namespace BTTx2
 		private void Rescale2(object sender, EventArgs e)
 		{
 			string output = ((Process)sender).StandardOutput.ReadToEnd();
-			if (!string.IsNullOrEmpty(output))
+			string errorOutput = ((Process)sender).StandardError.ReadToEnd();
+			if (ProcessErrors(output, errorOutput))
 			{
-				AddTextInfo(output);
 				MyEnabled = true;
 			}
 			else
 			{
 				AddTextInfo("ok\nImport back " + FileName + ": ");
-				ProgressBar(80);
+				ProgressBar(90);
 				Process p = initProc();
 				p.StartInfo.FileName = "gcrc";
 				p.StartInfo.Arguments = "-i \"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp2";
@@ -154,11 +183,8 @@ namespace BTTx2
 		private void Rescale3(object sender, EventArgs e)
 		{
 			string output = ((Process)sender).StandardOutput.ReadToEnd();
-			if (!string.IsNullOrEmpty(output))
-			{
-				AddTextInfo(output);
-			}
-			else
+			string errorOutput = ((Process)sender).StandardError.ReadToEnd();
+			if (!ProcessErrors(output, errorOutput))
 			{
 				AddTextInfo("ok\nDone");
 				ProgressBar(0);
@@ -229,8 +255,7 @@ namespace BTTx2
 		{
 			MyEnabled = false;
 			this.label3.Text = "Export " + FileName + ": ";
-			string aa = numericUpDown1.Value.ToString();
-			progressBar1.Increment(20);
+			ProgressBar(90);
 			Process p = initProc();
 			p.StartInfo.FileName = "gcrc";
 			p.StartInfo.Arguments = "\"" + imgPath + "\"" + " " + "\"" + FileName + "\"" + " " + "tmp";
@@ -241,16 +266,16 @@ namespace BTTx2
 		private void EventGetScale2(object sender, EventArgs e)
 		{
 			string output = ((Process)sender).StandardOutput.ReadToEnd();
-			if (!string.IsNullOrEmpty(output))
+			string errorOutput = ((Process)sender).StandardError.ReadToEnd();
+			if (ProcessErrors(output, errorOutput))
 			{
-				AddTextInfo(output);
 				MyEnabled = true;
 			}
 			else
 			{
 
 				AddTextInfo("ok\nGet " + FileName + "'s scale: ");
-				ProgressBar(60);
+				ProgressBar(95);
 				Process p = initProc();
 				p.StartInfo.FileName = "msr";
 				p.StartInfo.Arguments = "tmp";
@@ -304,7 +329,8 @@ namespace BTTx2
 		private void EventGetScale3(object sender, EventArgs e)
 		{
 			string output = ((Process)sender).StandardOutput.ReadToEnd();
-			if (output.Contains("rror"))
+			string errorOutput = ((Process)sender).StandardError.ReadToEnd();
+			if (ProcessErrors(output.Contains("rror") ? output : null, errorOutput))
 			{
 				AddTextInfo("" + output);
 			}
