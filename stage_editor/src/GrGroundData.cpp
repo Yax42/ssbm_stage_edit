@@ -76,6 +76,8 @@ GrGroundData::~GrGroundData()
 
 void		GrGroundData::init(int *ptr)
 {
+	if (Instance != NULL)
+		delete Instance;
 	Instance = new GrGroundData(ptr);
 }
 

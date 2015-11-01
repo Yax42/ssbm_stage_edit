@@ -10,11 +10,24 @@
 
 using namespace Header;
 
-int						*Worker::m_header;
+Worker					*Worker::Instance = NULL;
 std::vector<Image *>	Worker::m_images;
-int						Worker::m_origin;
-int						Worker::m_strOrigin;
 
+void	Worker::init()
+{
+	if (Instance != NULL)
+		delete Instance;
+	Instance = new Worker();
+}
+
+Worker::~Worker()
+{
+
+	for (unsigned int i = 0; i < m_images.size(); i++)
+		delete m_images[i];
+	for (unsigned int i = 0; i < m_testPositions.size(); i++)
+		delete m_testPositions[i];
+}
 
 bool	isOk(Image *img)
 {
@@ -25,14 +38,15 @@ bool	isOk(Image *img)
 bool	isOk(float v)
 {
 	int		*a = (int *)&v;
-	return (v == 0 || ((*a > 10000 || *a < -10000) && v < 10000.0 && v > -10000));// && (v >= 0.1 || v <= -0.1)));
+	return ((v > 0.00000001 || v < -0.00000001) && v > -10000 && v < 10000) || (*a == 0);
+	//return (*a == 0 || ((v > 0.001f || v < -0.001f || true) && (*a > 10000 || *a < -10000) && v < 10000.0 && v > -10000));// && (v >= 0.1 || v <= -0.1)));
 }
 
 bool	isTriositionOk(int id)
 {
 #if 1
 	for (int j = 0; j < 3; j++)
-		if (*Data::get<float>(id, j) != 0)
+		if (*Data::get<int>(id, j) != 0)
 			//if (!isOk(*Data::get<float>(id, j)))
 			return false;
 
@@ -52,10 +66,10 @@ bool	isTriositionOk(int id)
 
 }
 
-bool		Worker::loadData()
+Worker::Worker()
 {
 	if (Data::getHeader() == NULL)
-		return false;
+		return;
 	m_header = reinterpret_cast<int *> (Data::getHeader());
 
 	//Load Objects
@@ -89,7 +103,6 @@ bool		Worker::loadData()
 	int test = 0;
 	bool isFirst = true;
 	int imageOrigin = 0;
-	if (0)
 	for (int i = 0; i < m_origin; i += 4)
 	{
 
@@ -104,20 +117,11 @@ bool		Worker::loadData()
 
 		if (isTriositionOk(i))
 		{
-			//if (i < 100000 || i > 110000) continue; if (isFirst){ isFirst = false; continue;} //NBa
-			//if (i < 60000 || i > 70000) continue; //NLa
-			//if (i < 40000 || i > 50000) continue; // Shroom kingdom 2
-			//if (i < 540000 || i > 580000) continue; // Peach Castel
-
-			//std::cout << test++ << "\t" << i << std::endl;
-			new TestPosition(Data::get<int>(i), name, (i - imageOrigin) / 4);//imgCount);
+			m_testPositions.push_back(new TestPosition(Data::get<int>(i), name, (i - imageOrigin) / 4));//imgCount);
 			i+=8*4;
-			//448.8
 		}
-		//if (i >= CollData::m_ptr[CollData::LOCATIONS])
-		//	break;
 	}
-	/*
+#if false
 	int count = 0;
 	for (int i = 0; i < m_origin; i += 4)
 		if (*Data::get<float>(i) == 5)
@@ -126,11 +130,11 @@ bool		Worker::loadData()
 			*Data::get<float>(i) = 1;
 			count++;
 		}
-		*/
-	return true;
+#endif
+	return;
 }
 
-void		Worker::print()
+void		Worker::localPrint()
 {
 	std::cout << "File size " << m_header[Header::FILE_SIZE] << std::endl;
 	std::cout << "Number of table " << m_header[Header::NB_TABLE] << std::endl;
@@ -155,15 +159,16 @@ void		Worker::print()
 		*/
 
 	//Data::print(107360, 120);
-	//MapHead::print();
+	MapHead::Instance->print();
 
 	//CollData::print();
 	GrGroundData::Instance->print();
 }
 
-void		Worker::display()
+void		Worker::localDisplay()
 {
 //	for (unsigned int i = 0; i < m_images.size(); i++)
 //		m_images[i]->display();
 	ANode::globalDisplay();
 }
+

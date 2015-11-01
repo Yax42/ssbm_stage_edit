@@ -6,28 +6,33 @@
 #include "Resources.h"
 #include "BytesMatrix.h"
 #include "WriteDataInFile.h"
+#include "DatFile.h"
 
 
 int		main(int ac, char **av)
 {
-#if 0
+#if 1
 	Window::init();
 	Resources::init();
-	Data::read("../data/test.dat");
-	Worker::loadData();
-	BytesMatrix::Instance = new BytesMatrix(0, 64.f, Search());
+
+#if 1
+	DatFile::list("../../data/list/");
+#else
+	DatFile::set("../../data/test.dat");
+#endif
 
 	Worker::print();
 	g_window.loop();
 	//system("pause");
 	return (0);
-#elif 0
+#elif 1
 	WriteDataInFile::Do();
 #else
 	try
 	{
 	if (ac != 2 && ac != 4)
 	{
+
 		std::cout << "error: correct usage is \'msr <file_name_from> <file_name_to> <scale>\'" << std::endl;
 		return 0;
 	}

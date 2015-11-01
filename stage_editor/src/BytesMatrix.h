@@ -18,10 +18,12 @@ private:
 	};
 private:
 	static sf::Vector2f			ButtonsRects[COUNT][2];
-public:
+	void		privateInit(Search &search);
 	BytesMatrix(int *firstPtr, float buttonSize, Search &search);
 	BytesMatrix(int pos, float buttonSize, Search &search);
-	void		init(Search &search);
+public:
+	static void	init(int *firstPtr, float buttonSize, Search &search);
+	static void	init(int pos, float buttonSize, Search &search);
 	void		display();
 	void		process(sf::Vector2f &mouse, bool leftMouse, bool rightMouse, bool ctrl);
 	void		numberPressed(int v);

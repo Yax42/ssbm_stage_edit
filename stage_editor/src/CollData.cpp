@@ -27,6 +27,8 @@ CollData::CollData(int *ptr) : Ptr(ptr, m_labels, "CollData", 0, false)
 
 void CollData::init(int *ptr)
 {
+	if (Instance != NULL)
+		delete Instance;
 	Instance = new CollData(ptr);
 	Instance->load();
 }
@@ -71,12 +73,12 @@ void CollData::load()
 
 CollData::~CollData()
 {
-	if (m_nodes.size() > 0)
-	{
-		for (unsigned int i = 0; i < m_nodes.size(); i++)
-			delete m_nodes[i];
-		m_nodes.clear();
-	}
+	for (unsigned int i = 0; i < m_nodes.size(); i++)
+		delete m_nodes[i];
+	for (unsigned int i = 0; i < m_links.size(); i++)
+		delete m_links[i];
+	for (unsigned int i = 0; i < m_areas.size(); i++)
+		delete m_areas[i];
 }
 
 void		CollData::print()

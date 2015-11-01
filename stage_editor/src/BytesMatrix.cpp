@@ -6,6 +6,21 @@
 #include "SFML\Graphics.hpp"
 
 BytesMatrix			*BytesMatrix::Instance = NULL;
+
+void	BytesMatrix::init(int *firstPtr, float buttonSize, Search &search)
+{
+	if (Instance != NULL)
+		delete Instance;
+	Instance = new BytesMatrix(firstPtr, buttonSize, search);
+}
+
+void	BytesMatrix::init(int pos, float buttonSize, Search &search)
+{
+	if (Instance != NULL)
+		delete Instance;
+	Instance = new BytesMatrix(pos, buttonSize, search);
+}
+
 sf::Vector2f			BytesMatrix::ButtonsRects[COUNT][2] =
 {
 	{ sf::Vector2f(0, 0), sf::Vector2f(0, 0)},
@@ -23,7 +38,7 @@ BytesMatrix::BytesMatrix(int *firstPtr, float buttonSize, Search &search)
 	m_position = Data::getId(firstPtr);
 	m_buttonSize = buttonSize;
 	m_ptr = firstPtr;
-	init(search);
+	privateInit(search);
 }
 
 BytesMatrix::BytesMatrix(int pos, float buttonSize, Search &search)
@@ -36,10 +51,10 @@ BytesMatrix::BytesMatrix(int pos, float buttonSize, Search &search)
 	int firstId = pos;//(intPos) / (Window::width / (buttonSize + 1));
 	firstId = (firstId / 4) * 4;
 	m_ptr = Data::get<int>(firstId);
-	init(search);
+	privateInit(search);
 }
 
-void		BytesMatrix::init(Search &search)
+void		BytesMatrix::privateInit(Search &search)
 {
 	m_current = m_ptr;
 	Next = NULL;
@@ -191,7 +206,7 @@ void		BytesMatrix::process(sf::Vector2f &mouse, bool leftMouse, bool rightMouse,
 				else
 					break;
 			}
-			m_buttons[MOTHER].setText("Mother: " + name);
+			m_buttons[MOTHER].setText("[" + name + "]");
 			m_buttons[OFFSET].setText("#" + std::to_string(Data::getId((*it).m_ptr)));
 			m_buttons[NAME].setText((*it).m_ptrObject != NULL ? (*it).m_ptrObject->Name + " #" + std::to_string((*it).m_ptrObject->m_id) : "");
 			if ((*it).Jump)

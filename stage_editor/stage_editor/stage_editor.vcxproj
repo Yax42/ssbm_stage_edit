@@ -79,6 +79,7 @@
     <ClInclude Include="..\src\Coll_LinkNode.h" />
     <ClInclude Include="..\src\Coll_Node.h" />
     <ClInclude Include="..\src\Data.h" />
+    <ClInclude Include="..\src\DatFile.h" />
     <ClInclude Include="..\src\DynamicVar.h" />
     <ClInclude Include="..\src\GrGroundData.h" />
     <ClInclude Include="..\src\Image.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="..\src\Coll_LinkNode.cpp" />
     <ClCompile Include="..\src\Coll_Node.cpp" />
     <ClCompile Include="..\src\Data.cpp" />
+    <ClCompile Include="..\src\DatFile.cpp" />
     <ClCompile Include="..\src\GrGroundData.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MapHead.cpp" />

@@ -5,6 +5,13 @@
 std::vector<ANode *>		ANode::NodesList;
 int							ANode::SelectCount = 0;
 float						ANode::Scale = 1;
+
+void						ANode::clearList()
+{
+	Ptr::List.clear();
+	NodesList.clear();
+	SelectCount = 0;
+}
 		
 ANode::ANode(int *ptr, const std::vector<std::string> &labels, const std::string &name, int id, int deep, sf::Shape *shape, bool ptrIsOk)
 	: Object(ptr, labels, name, id, deep, ptrIsOk), m_shape(shape)

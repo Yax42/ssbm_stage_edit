@@ -17,7 +17,7 @@ public:
 		m_str = Data::get<char>(strPos, *m_strOffset);
 
 		if (isEqual("map_head"))
-			MapHead::load(m_ptr);
+			MapHead::init(m_ptr);
 		if (isEqual("coll_data"))
 			CollData::init(m_ptr);
 		if (isEqual("grGroundParam"))
@@ -49,7 +49,7 @@ public:
 		}
 		return;
 		if (isEqual("map_head"))
-			MapHead::print();
+			MapHead::Instance->print();
 		if (isEqual("coll_data"))
 			CollData::Instance->print();
 		//Tested:

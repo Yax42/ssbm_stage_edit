@@ -5,9 +5,7 @@
 #include "Map_Node.h"
 #include "MapHead.h"
 
-int									*MapHead::m_ptr = NULL;
-int									*MapHead::m_deepPtr = NULL;
-std::vector<Map::ObjectGroup *>		MapHead::m_groups;
+MapHead						*MapHead::Instance = NULL;
 
 void		MapHead::print()
 {
@@ -26,7 +24,7 @@ void		MapHead::display()
 		m_groups[i]->display();
 }
 
-void		MapHead::load(int *ptr)
+MapHead::MapHead(int *ptr)
 {
 	m_deepPtr = ptr;
 	m_ptr = Data::get<int>(*ptr);
@@ -42,12 +40,16 @@ void		MapHead::load(int *ptr)
 	}
 }
 
-void		MapHead::clean()
+void		MapHead::init(int *ptr)
 {
-	if (m_groups.size() > 0)
-	{
-		for (unsigned int i = 0; i < m_groups.size(); i++)
-			delete m_groups[i];
-		m_groups.clear();
-	}
+	if (Instance != NULL)
+		delete Instance;
+	Instance = new MapHead(ptr);
+}
+
+MapHead::~MapHead()
+{
+	for (unsigned int i = 0; i < m_groups.size(); i++)
+		delete m_groups[i];
+	m_groups.clear();
 }

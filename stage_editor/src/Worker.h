@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "Image.h"
+#include "TestPosition.h"
 
 namespace Header
 {
@@ -22,17 +23,22 @@ namespace Header
 class Worker
 {
 private:
-	Worker(int deep);
-	~Worker() {}
 public:
-	static void		print();
-	static void		display();
-	static bool		loadData();
-	static bool		saveData();
+	Worker();
+	~Worker();
+	static void		print() { Instance->localPrint(); }
+	static void		display() { Instance->localDisplay(); }
+	bool		saveData();
+	static void	init();
 
+private:
+	void		localPrint();
+	void		localDisplay();
 public:
-	static int						*m_header;
-	static std::vector<Image *>		m_images;
-	static int						m_strOrigin;
-	static int						m_origin;
+	int						*m_header;
+	static std::vector<Image *>	m_images;
+	std::vector<TestPosition *> m_testPositions;
+	int						m_strOrigin;
+	int						m_origin;
+	static Worker			*Instance;
 };

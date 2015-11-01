@@ -59,6 +59,7 @@ class ANode : public Object
 		static std::vector<ANode *>		NodesList;
 		static void						moveSelect(const sf::Vector2f &delta);
 		static int						SelectCount;
+		static void						clearList();
 	private:
 		sf::Shape				*m_shape;
 		static float					Scale;

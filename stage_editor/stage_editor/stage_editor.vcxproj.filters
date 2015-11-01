@@ -96,6 +96,9 @@
     <ClInclude Include="..\src\Search.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\DatFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Data.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\src\Search.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DatFile.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

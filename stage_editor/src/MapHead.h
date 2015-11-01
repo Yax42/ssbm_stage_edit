@@ -5,18 +5,18 @@
 #include "Window.h"
 #include "Map_Group.h"
 
-class MapHead : public Ptr
+class MapHead // : public Ptr
 {
 private:
-	MapHead();
+	MapHead(int *ptr);
+public:
+	static void			init(int *ptr);
+	void			print();
+	void			display();
 	~MapHead();
 public:
-	static void			load(int *ptr);
-	static void			print();
-	static void			display();
-	static void			clean();
-public:
-	static int									*m_ptr;
-	static int									*m_deepPtr;
-	static std::vector<Map::ObjectGroup *>		m_groups;
+	int									*m_ptr;
+	int									*m_deepPtr;
+	std::vector<Map::ObjectGroup *>		m_groups;
+	static MapHead						*Instance;
 };

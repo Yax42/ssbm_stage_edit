@@ -7,6 +7,7 @@
 #include "Coll_Node.h"
 #include "GrGroundData.h"
 #include "BytesMatrix.h"
+#include "DatFile.h"
 
 bool			DynamicVar::m_dummy = false;
 bool			*DynamicVar::m_shift = &DynamicVar::m_dummy;
@@ -178,14 +179,13 @@ void					Window::act()
 		if (m_justPressed[sf::Keyboard::N])
 		{
 			auto node = ANode::getOneSelected();
+			int *ptr = Data::get<int>(0);
 			if (node != NULL)
-			{
-				int btSize = BytesMatrix::Instance->m_buttonSize;
-				delete BytesMatrix::Instance;
-				BytesMatrix::Instance = new BytesMatrix(node->m_ptr, btSize, m_search);
-				m_editing = false;
-				m_window.setView(m_neutralView);
-			}
+				ptr = node->m_ptr;
+			int btSize = BytesMatrix::Instance->m_buttonSize;
+			BytesMatrix::init(ptr, btSize, m_search);
+			m_editing = false;
+			m_window.setView(m_neutralView);
 		}
 	}
 	else // BytesMatrix
@@ -194,14 +194,12 @@ void					Window::act()
 		{
 			int btSize = BytesMatrix::Instance->m_buttonSize;
 			auto next = BytesMatrix::Instance->Next;
-			delete BytesMatrix::Instance;
-			BytesMatrix::Instance = new BytesMatrix(next, btSize, m_search);
+			BytesMatrix::init(next, btSize, m_search);
 		}
 		else if (m_wheelDelta != 0)
 		{
 			int pos = BytesMatrix::Instance->m_position;
 			int btSize = BytesMatrix::Instance->m_buttonSize;
-			delete BytesMatrix::Instance;
 			if (m_keyPressed[sf::Keyboard::LControl])
 			{
 				float	deltaZoom = 1 + Math::sgn(m_wheelDelta) * 0.2f;
@@ -217,32 +215,29 @@ void					Window::act()
 				int lineSize = (1000 / (btSize + 1));
 				pos -= m_wheelDelta * factor * lineSize * (m_keyPressed[sf::Keyboard::LShift] ? 120 : 4);
 			}
-			BytesMatrix::Instance = new BytesMatrix(pos, btSize, m_search);
+			BytesMatrix::init(pos, btSize, m_search);
 		}
 		else if (m_justPressed[sf::Keyboard::S])
 		{
 			m_search = Search(BytesMatrix::Instance->m_current);
 			int pos = BytesMatrix::Instance->m_position;
 			int btSize = BytesMatrix::Instance->m_buttonSize;
-			delete BytesMatrix::Instance;
-			BytesMatrix::Instance = new BytesMatrix(pos, btSize, m_search);
+			BytesMatrix::init(pos, btSize, m_search);
 		}
-		else if (m_justPressed[sf::Keyboard::D])
+		else if (m_justPressed[sf::Keyboard::D] && !m_keyPressed[sf::Keyboard::LShift])
 		{
 			if (m_search.Found)
 			{
 				int btSize = BytesMatrix::Instance->m_buttonSize;
-				delete BytesMatrix::Instance;
-				BytesMatrix::Instance = new BytesMatrix(m_search.next(), btSize, m_search);
+				BytesMatrix::init(m_search.next(), btSize, m_search);
 			}
 		}
-		else if (m_justPressed[sf::Keyboard::F])
+		else if (m_justPressed[sf::Keyboard::D] && m_keyPressed[sf::Keyboard::LShift])
 		{
 			if (m_search.Found)
 			{
 				int btSize = BytesMatrix::Instance->m_buttonSize;
-				delete BytesMatrix::Instance;
-				BytesMatrix::Instance = new BytesMatrix(m_search.m_origin, btSize, m_search);
+				BytesMatrix::init(m_search.m_origin, btSize, m_search);
 			}
 		}
 
@@ -272,13 +267,15 @@ void					Window::act()
 		BytesMatrix::Instance->process(m_mousePosFloat, m_mouseJustPressed[sf::Mouse::Left], m_mouseJustPressed[sf::Mouse::Right], m_keyPressed[sf::Keyboard::LControl]);
 	}
 	//Save
-	if (m_justPressed[sf::Keyboard::Delete] || m_justPressed[sf::Keyboard::Tab])
+	if (m_justPressed[sf::Keyboard::Delete] || m_justPressed[sf::Keyboard::Tilde])
 	{
-		if (Data::write("../data/test.dat"))
-			std::cout << "saved" << std::endl;
-		else
-			std::cout << "failed save" << std::endl;
+		DatFile::save();
 	}
+
+	if (m_justPressed[sf::Keyboard::F1])
+		DatFile::applyPrev();
+	else if (m_justPressed[sf::Keyboard::F2])
+		DatFile::applyNext();
 }
 void					Window::cleanEvent()
 {
@@ -368,7 +365,7 @@ void					Window::display()
 {
 	if (m_editing)
 	{
-		Worker::display();
+		Worker::Instance->display();
 		if (m_isSelecting)
 			draw(m_selectShape);
 	}
