@@ -5,6 +5,7 @@
 #include "Data.h"
 #include "Worker.h"
 #include "BytesMatrix.h"
+#include "Window.h"
 
 std::vector<std::string>		DatFile::_fileList;
 int								DatFile::_idx;
@@ -67,6 +68,8 @@ void				DatFile::apply(const std::string &file)
 	Data::read(file);
 	Worker::init();
 	BytesMatrix::init(0, 64.f, Search());
+
+	Window::Instance->m_window.setTitle(file);
 }
 
 void				DatFile::save()

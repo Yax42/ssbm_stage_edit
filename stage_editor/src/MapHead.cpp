@@ -33,9 +33,11 @@ MapHead::MapHead(int *ptr)
 	for (int *i = m_ptr; *i != 0; i += 2)
 	{
 		Map::ObjectGroup	*cur = new Map::ObjectGroup(&i[0], &i[1]);
+#if 0
 		if (Map::ObjectGroup::Dummy)
 			delete cur;
 		else
+#endif
 			m_groups.push_back(cur);
 	}
 }

@@ -25,6 +25,11 @@ namespace Map
 		{
 			m_node = new Node(m_ptrToHeadNode, 1, NULL, *this, 0);
 			m_count = m_node->m_count;
+			if (Dummy)
+			{
+				delete m_node;
+				m_node = NULL;
+			}
 		}
 		//print();
 		prev = *m_ptrToHeadNode;
