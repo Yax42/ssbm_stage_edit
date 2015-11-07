@@ -56,6 +56,7 @@ BytesMatrix::BytesMatrix(int pos, float buttonSize, Search &search)
 
 void		BytesMatrix::privateInit(Search &search)
 {
+	m_select = NULL;
 	m_current = m_ptr;
 	Next = NULL;
 	m_number = "0";

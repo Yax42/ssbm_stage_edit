@@ -37,6 +37,7 @@ public:
 	int							*m_current;
 	int							*Next;
 	std::string					m_number;
+	ByteButton					*m_select;
 
 public:
 	static BytesMatrix			*Instance;

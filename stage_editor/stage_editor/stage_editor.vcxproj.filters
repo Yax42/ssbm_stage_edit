@@ -19,6 +19,12 @@
     <Filter Include="Header Files\GUI">
       <UniqueIdentifier>{f9b6899a-e913-4384-b934-3b9a6695fa14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\map_head">
+      <UniqueIdentifier>{e5db8a79-d3e2-4453-be1d-3ac5fa146c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\map_head">
+      <UniqueIdentifier>{23c1f4bd-9b5a-4240-a697-9566279ce0eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Data.h">
@@ -37,12 +43,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Map_Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Map_Group.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\MyMath.h">
@@ -99,6 +99,21 @@
     <ClInclude Include="..\src\DatFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Mesh.h">
+      <Filter>Header Files\map_head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\NodeData.h">
+      <Filter>Header Files\map_head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Map_Group.h">
+      <Filter>Header Files\map_head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Map_Node.h">
+      <Filter>Header Files\map_head</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Vertex.h">
+      <Filter>Header Files\map_head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Data.cpp">
@@ -114,12 +129,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Map_Node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Map_Group.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\CollData.cpp">
@@ -163,6 +172,21 @@
     </ClCompile>
     <ClCompile Include="..\src\DatFile.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Map_Node.cpp">
+      <Filter>Source Files\map_head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Map_Group.cpp">
+      <Filter>Source Files\map_head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mesh.cpp">
+      <Filter>Source Files\map_head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Vertex.cpp">
+      <Filter>Source Files\map_head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NodeData.cpp">
+      <Filter>Source Files\map_head</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -37,6 +37,8 @@ void CollData::load()
 {
 	//NODES
 	m_count = m_ptr[NUMBER];
+	if (m_count > 10000)
+		return;
 	int		*ptrToNodes = Data::get<int>(m_ptr[LOCATIONS]);
 	for (int i = 0; i < m_count; i++)
 	{
