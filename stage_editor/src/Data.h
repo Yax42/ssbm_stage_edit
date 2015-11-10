@@ -16,6 +16,7 @@ private:
 public:
 	static bool				read(const std::string &name);
 	static bool				write(const std::string &name);
+	static bool				ValidOffset(int idx) { return isInside(idx) && idx != 0; }
 	static bool				isInside(int idx) { return (idx >= 0 && idx < m_fileSize); }
 	template <class T>
 	static T				*get(int idx, int offset = 0)

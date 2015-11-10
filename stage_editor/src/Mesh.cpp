@@ -13,9 +13,9 @@ const std::vector<std::string> Mesh::m_labels =
 
 Mesh::Mesh(NodeData *father, int *ptr) : Object(ptr, m_labels, "Mesh", 0, 0, false), m_father(father), m_next(NULL), m_vertex(NULL)
 {
-	if (m_ptr[NEXT] != 0)
+	if (Data::ValidOffset(m_ptr[NEXT]))
 		m_next = new Mesh(m_father, &m_ptr[NEXT]);
-	if (m_ptr[VERTEX] != 0)
+	if (Data::ValidOffset(m_ptr[VERTEX]))
 		m_vertex = new Vertex(this, &m_ptr[VERTEX]);
 }
 

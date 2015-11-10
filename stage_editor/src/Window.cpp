@@ -172,7 +172,7 @@ void					Window::act()
 			m_view.zoom(m_zoom);
 			m_zoomTotal *= m_zoom;
 			m_window.setView(m_view);
-			ANode::globalSetScale(m_zoomTotal);
+			ANode::globalSetScale(m_zoomTotal > 1 ? 1 : m_zoomTotal);
 			m_selectShape.setOutlineThickness(m_zoomTotal * 2);
 		}
 

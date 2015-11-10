@@ -1,5 +1,6 @@
 #include "Map_Node.h"
 #include "Map_Group.h"
+#include "NodeData.h"
 
 namespace Map
 {
@@ -58,7 +59,7 @@ namespace Map
 		if (m_ptr == NULL)
 		{	
 			m_ptr = Data::Dummy;
-			m_intData = Data::Dummy;
+			m_ptr = Data::Dummy;
 			m_floatData = (float *)Data::Dummy;
 			m_mother = mother;
 			m_child = NULL;
@@ -70,17 +71,16 @@ namespace Map
 		}
 		else
 		{
-			m_intData = m_ptr;
 			m_floatData = (float *) m_ptr;
 			m_mother = mother;
 
 			m_rect.setPosition(pos());
-			m_rect.setFillColor(sf::Color((MotherCount % 2)* 127, ((MotherCount / 2) % 2) * 63 + 128, (m_intData[DATA_PTR] != 0) * 255, 128));
+			m_rect.setFillColor(sf::Color((MotherCount % 2)* 127, ((MotherCount / 2) % 2) * 63 + 128, (m_ptr[DATA_PTR] != 0) * 255, 128));
 
-			//std::cout << m_intData[Node::EMPTY1] << std::endl;
-			if (m_intData[CHILD_PTR] != 0)
+			//std::cout << m_ptr[Node::EMPTY1] << std::endl;
+			if (Data::ValidOffset(m_ptr[CHILD_PTR]))
 			{
-				m_child = new Node(&m_intData[CHILD_PTR], deep + 1, this, father, 0);
+				m_child = new Node(&m_ptr[CHILD_PTR], deep + 1, this, father, 0);
 				m_sizeFactor = 2.f;
 				MotherCount++;
 				m_count = m_child->m_count;
@@ -91,15 +91,24 @@ namespace Map
 				m_sizeFactor = 4.f;
 			}
 			m_rect.setSize(size());
-			if (m_intData[NEXT_PTR] != 0)
+			if (Data::ValidOffset(m_ptr[NEXT_PTR]))
 			{
-				m_next = new Node(&m_intData[NEXT_PTR], deep, m_mother, father, idx + 1);
+				m_next = new Node(&m_ptr[NEXT_PTR], deep, m_mother, father, idx + 1);
 				m_count = m_next->m_count;
 			}
 			else
 			{
 				m_count = idx + 1;
 				m_next = NULL;
+			}
+
+			if (Data::ValidOffset(m_ptr[DATA_PTR]))
+			{
+				m_data = new NodeData(this, &m_ptr[DATA_PTR]);
+			}
+			else
+			{
+				m_data = NULL;
 			}
 		}
 	}
@@ -120,14 +129,14 @@ namespace Map
 			std::cout << "Node " << m_name;
 		printTab();
 		std::cout
-			//		<<"Z" << m_intData[EMPTY1]
-				<< " Flag1:" << *((short*) &m_intData[FLAGS])
-				<< " Flag2:" << *(((short*) &m_intData[FLAGS]) + 1)
-				<< " Child:" << m_intData[CHILD_PTR]
-				<< " Next:" << m_intData[NEXT_PTR]
-				<< " Data:" << m_intData[DATA_PTR]
-				<< " Inverse:" << m_intData[INVERSE]
-		//		<< " Z" << m_intData[EMPTY2]
+			//		<<"Z" << m_ptr[EMPTY1]
+				<< " Flag1:" << *((short*) &m_ptr[FLAGS])
+				<< " Flag2:" << *(((short*) &m_ptr[FLAGS]) + 1)
+				<< " Child:" << m_ptr[CHILD_PTR]
+				<< " Next:" << m_ptr[NEXT_PTR]
+				<< " Data:" << m_ptr[DATA_PTR]
+				<< " Inverse:" << m_ptr[INVERSE]
+		//		<< " Z" << m_ptr[EMPTY2]
 		//		<< " Depth " << m_deep
 				<< std::endl;
 #if 1 // print transformation
@@ -138,9 +147,9 @@ namespace Map
 		printTab();
 		std::cout << "\tPosition:\tX" << m_floatData[LOCATIONX] << "\tY" << m_floatData[LOCATIONY] << "\tZ" << m_floatData[LOCATIONZ] << std::endl;
 #endif
-		if (false && m_intData[DATA_PTR] != 0)
+		if (false && m_ptr[DATA_PTR] != 0)
 		{
-			Data::strongPrint(m_intData[DATA_PTR]);
+			Data::strongPrint(m_ptr[DATA_PTR]);
 		}
 	}
 

@@ -14,11 +14,14 @@ const std::vector<std::string> NodeData::m_labels =
 NodeData::NodeData(Map::Node *father, int *ptr)
 	: Ptr(ptr, m_labels, "NodeData", 0, false), m_father(father)
 {
-	if (Data::isInside(m_ptr[NEXT]))
+	if (Data::ValidOffset(m_ptr[NEXT]))
 		m_next = new NodeData(father, &m_ptr[NEXT]);
 	else
 		m_next = NULL;
-	m_mesh = new Mesh(this, &m_ptr[MESH]);
+	if (Data::ValidOffset(m_ptr[MESH]))
+		m_mesh = new Mesh(this, &m_ptr[MESH]);
+	else
+		m_mesh = NULL;
 }
 
 NodeData::~NodeData()

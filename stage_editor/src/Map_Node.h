@@ -2,6 +2,8 @@
 
 #include "Node.h"
 
+class NodeData;
+
 namespace Map
 {
 	class ObjectGroup;
@@ -46,7 +48,6 @@ namespace Map
 		virtual void	setThickness(int v);
 
 	public:
-		int					*m_intData;
 		float				*m_floatData;
 		Node				*m_child;
 		Node				*m_next;
@@ -56,5 +57,6 @@ namespace Map
 		static char			*Names[17];
 		std::string			m_name;
 		int					m_count;
+		NodeData			*m_data;
 	};
 }
