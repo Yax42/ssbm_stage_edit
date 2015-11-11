@@ -14,7 +14,7 @@ namespace Map
 	public:
 		static bool		Dummy;
 	public:
-		ObjectGroup(int *ptr, int *id, int deep = 0);
+		ObjectGroup(int *ptr, int *id, int deep = 0, bool ptrIsOkay = false);
 		~ObjectGroup();
 		virtual void	print();
 		virtual void	display();

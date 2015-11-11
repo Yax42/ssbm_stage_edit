@@ -96,6 +96,7 @@
     <ClInclude Include="..\src\Search.h" />
     <ClInclude Include="..\src\TestPosition.h" />
     <ClInclude Include="..\src\Vertex.h" />
+    <ClInclude Include="..\src\VertexNode.h" />
     <ClInclude Include="..\src\Window.h" />
     <ClInclude Include="..\src\Worker.h" />
     <ClInclude Include="..\src\WriteDataInFile.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="..\src\Resources.cpp" />
     <ClCompile Include="..\src\Search.cpp" />
     <ClCompile Include="..\src\Vertex.cpp" />
+    <ClCompile Include="..\src\VertexNode.cpp" />
     <ClCompile Include="..\src\Window.cpp" />
     <ClCompile Include="..\src\Worker.cpp" />
     <ClCompile Include="..\src\WriteDataInFile.cpp" />

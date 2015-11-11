@@ -114,6 +114,9 @@
     <ClInclude Include="..\src\Vertex.h">
       <Filter>Header Files\map_head</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\VertexNode.h">
+      <Filter>Header Files\map_head</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Data.cpp">
@@ -186,6 +189,9 @@
       <Filter>Source Files\map_head</Filter>
     </ClCompile>
     <ClCompile Include="..\src\NodeData.cpp">
+      <Filter>Source Files\map_head</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\VertexNode.cpp">
       <Filter>Source Files\map_head</Filter>
     </ClCompile>
   </ItemGroup>

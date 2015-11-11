@@ -14,11 +14,13 @@ bool			*DynamicVar::m_shift = &DynamicVar::m_dummy;
 bool			*DynamicVar::m_ctrl = &DynamicVar::m_dummy;
 bool			*DynamicVar::m_alt = &DynamicVar::m_dummy;
 Window	*Window::Instance = NULL;
-const int		Window::height = 720;
-const int		Window::width = 1280;
+int		Window::height = 720;
+int		Window::width = 1280;
 
-void		Window::init()
+void		Window::init(int w, int h)
 {
+	height = h;
+	width = w;
 	if (Instance == NULL)
 		Instance = new Window();
 }

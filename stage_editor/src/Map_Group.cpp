@@ -11,8 +11,8 @@ namespace Map
 	};
 	bool	ObjectGroup::Dummy;
 
-	ObjectGroup::ObjectGroup(int *ptr, int *id, int deep)
-		: Object(ptr, m_labels , "ObjectGroup", *id, deep, false)
+	ObjectGroup::ObjectGroup(int *ptr, int *id, int deep, bool ptrIsOkay)
+		: Object(ptr, m_labels , "ObjectGroup", *id, deep, ptrIsOkay)
 	{
 		static int		prev = 0;
 		m_ptrToHeadNode = &m_ptr[0];

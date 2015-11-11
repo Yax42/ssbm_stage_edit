@@ -12,13 +12,13 @@
 int		main(int ac, char **av)
 {
 #if 1
-	Window::init();
+	Window::init(1024, 768);
 	Resources::init();
 
-#if 1
+#if 0
 	DatFile::list("../../data/list/");
 #else
-	DatFile::set("../../data/test.dat");
+	DatFile::set("../../data/list/GrSh.dat");
 #endif
 
 	Worker::print();

@@ -38,16 +38,16 @@ bool	isOk(Image *img)
 bool	isOk(float v)
 {
 	int		*a = (int *)&v;
-	return ((v > 0.00000001 || v < -0.00000001) && v > -10000 && v < 10000) || (*a == 0);
+	return ((v > 0.00000001 || v < -0.00000001) && v > -1000000 && v < 1000000) || (*a == 0);
 	//return (*a == 0 || ((v > 0.001f || v < -0.001f || true) && (*a > 10000 || *a < -10000) && v < 10000.0 && v > -10000));// && (v >= 0.1 || v <= -0.1)));
 }
 
 bool	isTriositionOk(int id)
 {
-#if 1
+#if 0
 	for (int j = 0; j < 3; j++)
 		if (*Data::get<int>(id, j) != 0)
-			//if (!isOk(*Data::get<float>(id, j)))
+		//if (!isOk(*Data::get<float>(id, j)))
 			return false;
 
 	for (int j = 3; j < 6; j++)
@@ -97,12 +97,15 @@ Worker::Worker()
 				m_images[i] = m_images[j];
 				m_images[j] = tmp;
 			}
+	for (int i = 0; i < m_header[NB_BASE]; i++)
+		m_images[i]->init();
 
 	std::string name = "NONE";
 	int imgCount = 0;
 	int test = 0;
 	bool isFirst = true;
 	int imageOrigin = 0;
+#if false
 	for (int i = 0; i < m_origin; i += 4)
 	{
 
@@ -115,7 +118,8 @@ Worker::Worker()
 		if (imgCount > 0 && !isOk(m_images[imgCount - 1]))
 			continue;
 
-		if (isTriositionOk(i))
+		int origin = i -= 5 * 4;
+		if (isTriositionOk(i) && origin)
 		{
 			m_testPositions.push_back(new TestPosition(Data::get<int>(i), name, (i - imageOrigin) / 4));//imgCount);
 			i+=8*4;
@@ -131,7 +135,18 @@ Worker::Worker()
 			count++;
 		}
 #endif
-	return;
+#endif
+#if 0
+	int id = 0;
+	for (int *origin = Data::get<int>(0); origin < m_images[0]->m_ptr; origin++)
+	{
+		if (*origin < Data::getId(m_images[0]->m_ptr)
+			|| *origin > Data::m_fileSize - 300)
+			continue;
+		if (isTriositionOk(*origin + 5 * 4))
+			m_testPositions.push_back(new Map::ObjectGroup(origin, &id));
+	}
+#endif
 }
 
 void		Worker::localPrint()

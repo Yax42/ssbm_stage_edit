@@ -37,7 +37,7 @@ private:
 public:
 	int						*m_header;
 	static std::vector<Image *>	m_images;
-	std::vector<TestPosition *> m_testPositions;
+	std::vector<Map::ObjectGroup *> m_testPositions;
 	int						m_strOrigin;
 	int						m_origin;
 	static Worker			*Instance;

@@ -15,6 +15,10 @@ public:
 	{
 		m_strOffset = Data::get<int>(pos, 1);
 		m_str = Data::get<char>(strPos, *m_strOffset);
+	}
+
+	void init()
+	{
 
 		if (isEqual("map_head"))
 			MapHead::init(m_ptr);

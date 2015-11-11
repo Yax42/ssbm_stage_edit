@@ -29,10 +29,10 @@ class Window
 {
 //----SINGLETON
 public:
-	static const int		height;
-	static const int		width;
+	static int		height;
+	static int		width;
 public:
-	static void		init();
+	static void		init(int w, int h);
 	static Window	*Instance;
 private:
 	Window();

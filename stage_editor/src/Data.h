@@ -6,7 +6,8 @@
 
 #include "MyMath.h"
 
-#define Byte	unsigned char
+typedef unsigned char Byte;
+typedef unsigned short ushort;
 
 class Data
 {
@@ -33,6 +34,29 @@ public:
 	static void				print(int *idx, int count = 10, bool fourOct = false);
 	static void				strongPrint(int idx, int count = 5, int deepLimit = 5, int tab = 0);
 	static int				getId(void *ptr) { return (((int)ptr) - ((int)m_data)); }
+	static bool				isFloatOk(float v);
+	static bool				isTransformOk(int id);
+	static bool				IsBigEndian()
+	{
+		char SwapTest[2] = { 1, 0 };
+		return (*(short *)SwapTest == 1); // test if my computer is big endian
+	}
+
+	template <class T>
+	static T				GetMicro(void *ptr, int idx)
+	{
+		T *bptr = (T *) ptr;
+		idx = IsBigEndian() ? sizeof(T) - 1 - idx : idx;
+		return bptr[idx];
+	}
+
+	template <class T>
+	static void				SetMicro(void *ptr, int idx, T value)
+	{
+		T *bptr = (T *) ptr;
+		idx = IsBigEndian() ? sizeof(T) - 1 - idx : idx;
+		bptr[idx] = value;
+	}
 
 	static int				*m_intData;
 private:

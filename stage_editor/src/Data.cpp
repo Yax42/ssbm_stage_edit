@@ -21,8 +21,7 @@ int				Data::Dummy[100] = {0};
 template <class T>
 void	fixEndian(T &val) // to big endian
 {
-	static const char SwapTest[2] = { 1, 0 };
-	if( *(short *) SwapTest == 1) // test if my computer is big endian
+	if (Data::IsBigEndian())
 	{
 		union
 		{
@@ -201,14 +200,14 @@ void	printTab(int count)
 	for (int i = 0; i < count; i++)
 		std::cout << "\t";
 }
- void				Data::strongPrint(int idx, int count, int deepLimit, int tab)
- {
+void				Data::strongPrint(int idx, int count, int deepLimit, int tab)
+{
 	std::cout << "Index:\t" << idx << std::endl;
 	if (idx + count > m_fileSize)
 	{
 		printTab(tab);
 		std::cout << "pointer out of boundaries" << std::endl;
-		return ;
+		return;
 	}
 	for (int i = 0; i < count; i++)
 	{
@@ -218,14 +217,14 @@ void	printTab(int count)
 		std::cout << i << ": ";
 		if (Math::abs(*data) > m_fileSize)
 		{
-			if (Math::abs(*(float *) data) < 0.01)
+			if (Math::abs(*(float *)data) < 0.01)
 			{
 				std::cout << Math::binStr(*data) << std::endl;
 			}
 			else
 			{
-				std::cout  << *((float *) data);
-				std::cout  << "\t" << ((float *) *data);
+				std::cout << *((float *)data);
+				std::cout << "\t" << ((float *)*data);
 				std::cout << "\t" << *data << std::endl;
 			}
 		}
@@ -234,4 +233,16 @@ void	printTab(int count)
 		else
 			std::cout << *data << std::endl;
 	}
- }
+}
+bool				Data::isFloatOk(float v)
+{
+	int		*a = (int *)&v;
+	return ((v > 0.00000001 || v < -0.00000001) && v > -1000000 && v < 1000000) || (*a == 0);
+}
+bool				Data::isTransformOk(int id)
+{
+	for (int j = 0; j < 9; j++)
+		if (!isFloatOk(*Data::get<float>(id, j)))
+			return false;
+	return true;
+}
