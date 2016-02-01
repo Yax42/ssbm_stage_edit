@@ -237,6 +237,13 @@ void				Data::strongPrint(int idx, int count, int deepLimit, int tab)
 bool				Data::isFloatOk(float v)
 {
 	int		*a = (int *)&v;
+	if (*a == 0)
+		a = a;
+	if (Data::GetMicro<Byte>(&v, 0) == 128
+			&& Data::GetMicro<Byte>(&v, 1) == 0
+			&& Data::GetMicro<Byte>(&v, 2) == 0
+			&& Data::GetMicro<Byte>(&v, 3) == 0)
+		return true;
 	return ((v > 0.00000001 || v < -0.00000001) && v > -1000000 && v < 1000000) || (*a == 0);
 }
 bool				Data::isTransformOk(int id)

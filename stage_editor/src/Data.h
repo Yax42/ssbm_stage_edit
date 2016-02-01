@@ -46,15 +46,23 @@ public:
 	static T				GetMicro(void *ptr, int idx)
 	{
 		T *bptr = (T *) ptr;
-		idx = IsBigEndian() ? sizeof(T) - 1 - idx : idx;
+		idx = IsBigEndian() ? 4 / sizeof(T) - 1 - idx : idx;
 		return bptr[idx];
+	}
+
+	template <class T>
+	static T				*GetMicroPtr(void *ptr, int idx)
+	{
+		T *bptr = (T *) ptr;
+		idx = IsBigEndian() ? 4 / sizeof(T) - 1 - idx : idx;
+		return &bptr[idx];
 	}
 
 	template <class T>
 	static void				SetMicro(void *ptr, int idx, T value)
 	{
 		T *bptr = (T *) ptr;
-		idx = IsBigEndian() ? sizeof(T) - 1 - idx : idx;
+		idx = IsBigEndian() ? 4 / sizeof(T) - 1 - idx : idx;
 		bptr[idx] = value;
 	}
 

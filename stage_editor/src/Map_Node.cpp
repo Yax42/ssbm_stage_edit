@@ -164,7 +164,9 @@ namespace Map
 
 	void		Node::display()
 	{
+		updatePos();
 		g_window.draw(m_rect);
+		return;
 		if (m_child != NULL)
 			m_child->display();
 		if (m_next != NULL)

@@ -29,9 +29,13 @@ public:
 	void displayTexts();
 private:
 	void		updateJump();
+	bool		containsAndClick();
 private:
 	Button		m_buttons[COUNT];
 	sf::Color	m_color;
+	bool		m_modif;
+	bool		m_isOn;
+	bool		m_rightclick;
 public:
 	bool					Jump;
 	int						*m_ptr;

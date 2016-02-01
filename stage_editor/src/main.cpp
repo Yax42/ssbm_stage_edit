@@ -18,7 +18,7 @@ int		main(int ac, char **av)
 #if 0
 	DatFile::list("../../data/list/");
 #else
-	DatFile::set("../../data/list/GrSh.dat");
+	DatFile::set("../../data/test.dat");
 #endif
 
 	Worker::print();
